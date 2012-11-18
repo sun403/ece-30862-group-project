@@ -1,3 +1,4 @@
 # /bin/sh
-javac -cp asteroid_src/:lwjgl-2.8.5/jar/lwjgl.jar:/lwjgl-2.8.5/jar/lwjgl_util.jar asteroid_src/Asteroids.java
+rm -rf asteroid_src/*.class
+javac -Xlint:unchecked -cp slick.jar:asteroid_src/:lwjgl-2.8.5/jar/lwjgl.jar:/lwjgl-2.8.5/jar/lwjgl_util.jar asteroid_src/Asteroids.java
 
