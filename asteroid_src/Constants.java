@@ -19,6 +19,8 @@ public final class Constants
 
 	public static final double THRUSTER_FORCE = 500.0;
 	public static final double MISSLE_LAUNCH_VELOCITY = 120.0;
+
+    //can't be final
 	public static double DELTA = 15;
 
 	public static double SCALING_FACTOR;
@@ -26,10 +28,15 @@ public final class Constants
 	public static double DELTA_T;
 	public static Vector MAX_POSITION;
 
-	public static final double ROTATION_SPEED = 1.0;
+	public static final double ROTATION_SPEED = 3.0;    
 
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
+
+    public static final int CONTINUE_GAME = 0;
+    public static final int CONTINUE_GAME_WITH_NEW_OPTIONS = 1;
+    public static final int SAVE_GAME = 2;
+    public static final int QUIT_GAME = 3;
 
 	public static final void drawCircle(Vector center, double radius)
 	{

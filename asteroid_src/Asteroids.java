@@ -12,17 +12,25 @@ import java.io.*;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.util.Scanner;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JDialog;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 //import org.lwjgl.util.*;
+//
+import org.newdawn.slick.*;
+import org.newdawn.slick.font.effects.*;
+import java.util.List;
 
 public final class Asteroids
 {
-	//Font stringFont = new Font("Times New Roman", Font.BOLD, 24);
-	//Sounds soundPlayer = new Sounds();
+	Font javaFont = new Font("Times New Roman", Font.BOLD, 24);
+    UnicodeFont scoreFont = new UnicodeFont(javaFont, 20, false, false);
+    ColorEffect scoreFontColorEffect = new ColorEffect();
 
 	boolean debounceShoot = false;
 	boolean debounceThrust = false;
@@ -33,22 +41,27 @@ public final class Asteroids
 
 	public DisplayMode largestDisplay(DisplayMode modeArray[])
 	{
-		if(modeArray.length != 0) {
-
+		if(modeArray.length != 0)
+        {
 			int maxWidth = modeArray[0].getWidth();
-			int maxHeight = modeArray[0].getHeight();
+			//int maxHeight = modeArray[0].getHeight();
+			int maxHeight = 600;
 			int maxFrequency = modeArray[0].getFrequency();
 			int maxBitsPerPixel = modeArray[0].getBitsPerPixel();
 
 			//Setting maxWidth, maxHeight, maxFrequency, and maxBitsPerPixel.
+            //hacked kinda to runat 800x600
 
-			for(int i = 1; i < modeArray.length; i++) {
+			for(int i = 1; i < modeArray.length; i++)
+            {
 				if(modeArray[i].getWidth() > maxWidth) {
-					maxWidth = modeArray[i].getWidth();
+					//maxWidth = modeArray[i].getWidth();
+                    maxWidth = 800;
 				}
 
 				if(modeArray[i].getHeight() > maxHeight) {
-					maxHeight = modeArray[i].getHeight();
+					//maxHeight = modeArray[i].getHeight();
+                    maxHeight = 600;
 				}
 
 				if(modeArray[i].getFrequency() > maxFrequency) {
@@ -59,16 +72,20 @@ public final class Asteroids
 					maxBitsPerPixel = modeArray[i].getBitsPerPixel();
 				}
 
-				for(i = 0; i < modeArray.length; i++) {
+				for(i = 0; i < modeArray.length; i++)
+                {
+                    System.out.println(modeArray[i]);
 					if (modeArray[i].getWidth() == maxWidth &&
 						modeArray[i].getHeight() == maxHeight &&
 						modeArray[i].getFrequency() == maxFrequency &&
-						modeArray[i].getBitsPerPixel() == maxBitsPerPixel) {
+						modeArray[i].getBitsPerPixel() == maxBitsPerPixel)
+                    {
 							return modeArray[i];
-						}
+                    }
 				}
 
 				System.out.println("Not 1 DisplayMode holds all of the max properties. This shouldn't happen.");
+                System.out.println(String.format("%d %d %d %d", maxWidth, maxHeight, maxFrequency, maxBitsPerPixel));
 
 				return null;
 			}
@@ -81,7 +98,8 @@ public final class Asteroids
 
 	public void addAsteroids()
 	{
-		for(int i = 0; i < 10 + 5*(gameLevel - 1); i++) {
+		for(int i = 0; i < 10 + 5*(gameLevel - 1); i++)
+        {
 			SpaceObject.allSpaceObjects.add(new Asteroid(new Vector(10 * Math.random(),
 																	10 * Math.random()),
 
@@ -92,9 +110,25 @@ public final class Asteroids
 		}
 	}
 
+    @SuppressWarnings("unchecked")
+    public void initializeScoreFont()
+    {
+        try 
+        {
+            scoreFont.addAsciiGlyphs();
+            scoreFont.getEffects().add(scoreFontColorEffect);
+            scoreFont.loadGlyphs();
+        }
+        catch(SlickException s)
+        {
+            System.out.println("wtf");
+        }
+    }
+
 	public void start()
 	{
-		try {
+		try
+        {
 			DisplayMode biggestDisplay = largestDisplay(Display.getAvailableDisplayModes());
 			// Display.setFullscreen(true);
 			Display.setDisplayMode(biggestDisplay);
@@ -106,7 +140,7 @@ public final class Asteroids
 
 			Constants.SCALING_FACTOR = Constants.SCREEN_WIDTH / 768;
 			Constants.DELTA *= Constants.SCALING_FACTOR;
-			Constants.DELTA_T = .01;
+			Constants.DELTA_T = .1;
 			Constants.MAX_POSITION = new Vector(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
 			SpaceObject.allSpaceObjects = new ArrayList<SpaceObject>();
@@ -114,9 +148,12 @@ public final class Asteroids
 			SpaceObject.objectsToRemove = new ArrayList<SpaceObject>();
 
 			Display.create();
+            Keyboard.create();
+            //Keyboard.enableRepeatEvents(false);
 
 		}
-		catch (LWJGLException e) {
+		catch (LWJGLException e)
+        {
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -133,7 +170,7 @@ public final class Asteroids
 
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(0, Constants.SCREEN_WIDTH, 0, Constants.SCREEN_HEIGHT, 1, -1);
+		GL11.glOrtho(0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, 0, 1, -1);
 
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -141,62 +178,117 @@ public final class Asteroids
 		//Everything we draw will be white, so set it once and ft it
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 
-		while(!gameOver) {
+        initializeScoreFont();
 
-			while (!Display.isCloseRequested() && !gameOver) {
+		while(!gameOver) 
+        {
+			while(!Display.isCloseRequested() && !gameOver)
+            {
+                if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+                {
+                    System.out.println("ESC BUTTON PRESSED");
+                    System.out.println(Keyboard.isRepeatEvent());
 
-				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+                    PauseDialog pauseWindow = new PauseDialog();
+                    pauseWindow.setVisible(true);
 
-					// TODO: Fix this
-					System.out.println("EXIT");
-					System.out.println(gameScore);
-					try {
-						//soundPlayer.finalize();
-					}
-					catch(Throwable t) {}
-					Display.destroy();
-					gameOver = true;
-				}
+                    //Waiting until the pause window is closed
+                    try
+                    {
+                        synchronized(pauseWindow) {
+                            pauseWindow.wait();
+                        }
+                    }
+                    catch(InterruptedException i) {System.out.println("help me"); }
 
-				if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-					userCraft.thrust();
+                    switch(pauseWindow.getReturnCode())
+                    {
+                        case Constants.QUIT_GAME:
+                            System.out.println("Asteroids got QUIT_GAME");
+                            Keyboard.destroy();
+                            Display.destroy();
+                            gameOver = true;
+                            return;
 
-					if(debounceThrust) {
-						userCraft.drawThruster();
-					}
-					debounceThrust = !debounceThrust;
-				}
+                        case Constants.CONTINUE_GAME:
+                            System.out.println("Asteroids got CONTINUE_GAME");
+                            break;
 
-				if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-					userCraft.changeTheta(-Constants.ROTATION_SPEED);
-				}
+                       case Constants.CONTINUE_GAME_WITH_NEW_OPTIONS:
+                            System.out.println("Asteroids got CONTINUE_GAME_WITH_NEW_OPTIONS");
+                            break;
 
-				if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-					userCraft.changeTheta(Constants.ROTATION_SPEED);
-				}
+                       case Constants.SAVE_GAME:
+                            System.out.println("Asteroids got SAVE_GAME");
+                            break;
 
-				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-					if(!debounceShoot) {
-						userCraft.shoot();
-						//soundPlayer.play(0);
-						debounceShoot = true;
-					}
-				} else {
-					debounceShoot = false;
-				}
+                       default:
+                            System.out.println("bad");
+                            System.out.println(pauseWindow.getReturnCode());
+                            break;
+                    }
+
+
+                    //Fixes esc key bug
+                    //needs to be fixed in lwjgl
+                    try 
+                    {
+                        Keyboard.destroy();
+                        Keyboard.create();
+                    }
+                    catch(LWJGLException e) {}
+                }
+
+                if(Keyboard.isKeyDown(Keyboard.KEY_UP))
+                {
+                    userCraft.thrust();
+
+                    if(debounceThrust) {
+                        userCraft.drawThruster();
+                    }
+                    debounceThrust = !debounceThrust;
+                }
+
+                if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+                    userCraft.changeTheta(Constants.ROTATION_SPEED);
+                }
+
+                if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+                    userCraft.changeTheta(-Constants.ROTATION_SPEED);
+                }
+
+                if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+                {
+                    if(!debounceShoot)
+                    {
+                        userCraft.shoot();
+                        //soundPlayer.play(0);
+                        debounceShoot = true;
+                    }
+                }
+                else {
+                    debounceShoot = false;
+                }
 
 				//Clearing the screen
 				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+                GL11.glEnable(GL11.GL_BLEND);
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                scoreFont.drawString(0, 0, "Score: " + gameScore, org.newdawn.slick.Color.white);
+                scoreFont.drawString(100, 0, " ", org.newdawn.slick.Color.white);
+
 
 				//GL11.glBegin(GL11.GL_QUADS);
 				//GL11.glBegin(GL11.GL_POINTS);
 
-				try {
-				    for(SpaceObject s : SpaceObject.allSpaceObjects) {
-			    		if(s instanceof Asteroid) {
-
-			    			//if(crash)
-			    			if(userCraft.position.distanceTo(s.position) < ((Asteroid)s).radius + userCraft.radius) {
+				try
+                {
+				    for(SpaceObject s : SpaceObject.allSpaceObjects)
+                    {
+			    		if(s instanceof Asteroid)
+                        {
+			    			if(userCraft.position.distanceTo(s.position) < ((Asteroid)s).radius + userCraft.radius)
+                            {
 			    				userCraft.subtractLife();
 
 			    				//Resetting userCraft to the middle of the screen
@@ -213,15 +305,19 @@ public final class Asteroids
 	 		    			}
 			    		}
 
-			    		if(s instanceof Missle) {
-			    			for(SpaceObject a : SpaceObject.allSpaceObjects) {
-			    				if(a instanceof Asteroid) {
+			    		if(s instanceof Missle)
+                        {
+			    			for(SpaceObject a : SpaceObject.allSpaceObjects)
+                            {
+			    				if(a instanceof Asteroid)
+                                {
 
 			    					//if(we shoot an asteroid)
-			    					if(s.position.distanceTo(a.position) < ((Asteroid)a).radius + ((Missle)s).radius) {
+			    					if(s.position.distanceTo(a.position) < ((Asteroid)a).radius + ((Missle)s).radius)
+                                    {
 			    						s.delete();
 			    						a.delete();
-			    						gameScore += 10;
+			    						gameScore += 5;
 			    					}
 			    				}
 			    			}
@@ -244,15 +340,16 @@ public final class Asteroids
 				    if(SpaceObject.allSpaceObjects.size() == 1) {
 				    	gameLevel++;
 				    	addAsteroids();
+                        System.out.println("Next level");
 				    }
 
-//				    stringFont.drawString(100, 50, "Score: " + gameScore, Color.WHITE);
 
 					Display.update();
 				}
 
 				//Crash, reset asteroids
-				catch(Exception e) {
+				catch(Exception e)
+                {
 					SpaceObject.allSpaceObjects.clear();
 					SpaceObject.allSpaceObjects.add(userCraft);
 

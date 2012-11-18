@@ -1,2 +1,3 @@
 #! /bin/sh
-java -cp asteroid_src:lwjgl-2.8.5/jar/lwjgl.jar -Djava.library.path=lwjgl-2.8.5/native/linux Asteroids
+java -cp slick.jar:asteroid_src:lwjgl-2.8.5/jar/lwjgl.jar -Djava.library.path=lwjgl-2.8.5/native/linux Asteroids
+rm asteroid_src/*.class
