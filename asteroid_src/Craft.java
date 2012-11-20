@@ -53,8 +53,8 @@ public class Craft extends SpaceObject
 		lineTwo.draw();
 		lineThree.draw();
 
-		if(drawThruster) {
-
+		if(drawThruster)
+        {
 			/* Thruster */
 			Vector v6 = new Vector(-Constants.DELTA, 0);
 			Vector v7 = new Vector(0, .42 * Constants.DELTA);

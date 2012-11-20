@@ -19,10 +19,19 @@ public class Vector
 		return new Vector(scalar * x, scalar * y);
 	}
 
+    public void scalarMultiply(double scalar) {
+        x *= scalar;
+        y *= scalar;
+    }
+
 	public void add(Vector v) {
 		x += v.x;
 		y += v.y;
 	}
+
+    public void flipY() {
+        y *= -1;
+    }
 
 	/* Theta = in degrees. */
 	public void rotate(double theta)
