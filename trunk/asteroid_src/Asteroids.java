@@ -24,8 +24,15 @@ import org.lwjgl.openal.AL10;
 //
 import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.*;
-import java.util.List;
 
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Collections;
+
+//TODO:
+//WHEN THE CRAFT DIES, RESET IT'S MOMENTUM
 public final class Asteroids
 {
 	Font javaFont = new Font("Times New Roman", Font.BOLD, 24);
@@ -39,60 +46,19 @@ public final class Asteroids
 	int gameLevel = 1;
 	int gameScore = 0;
 
-	public DisplayMode largestDisplay(DisplayMode modeArray[])
+
+	public DisplayMode largestDisplay(DisplayMode[] modeArray)
 	{
 		if(modeArray.length != 0)
         {
-			int maxWidth = modeArray[0].getWidth();
-			//int maxHeight = modeArray[0].getHeight();
-			int maxHeight = 600;
-			int maxFrequency = modeArray[0].getFrequency();
-			int maxBitsPerPixel = modeArray[0].getBitsPerPixel();
+            DisplayModeSorter s = new DisplayModeSorter(modeArray);
+            DisplayMode toReturn = s.getBestDisplayMode();
+            System.out.println(toReturn);
 
-			//Setting maxWidth, maxHeight, maxFrequency, and maxBitsPerPixel.
-            //hacked kinda to runat 800x600
-
-			for(int i = 1; i < modeArray.length; i++)
-            {
-				if(modeArray[i].getWidth() > maxWidth) {
-					//maxWidth = modeArray[i].getWidth();
-                    maxWidth = 800;
-				}
-
-				if(modeArray[i].getHeight() > maxHeight) {
-					//maxHeight = modeArray[i].getHeight();
-                    maxHeight = 600;
-				}
-
-				if(modeArray[i].getFrequency() > maxFrequency) {
-					maxFrequency = modeArray[i].getFrequency();
-				}
-
-				if(modeArray[i].getBitsPerPixel() > maxBitsPerPixel) {
-					maxBitsPerPixel = modeArray[i].getBitsPerPixel();
-				}
-
-				for(i = 0; i < modeArray.length; i++)
-                {
-                    System.out.println(modeArray[i]);
-					if (modeArray[i].getWidth() == maxWidth &&
-						modeArray[i].getHeight() == maxHeight &&
-						modeArray[i].getFrequency() == maxFrequency &&
-						modeArray[i].getBitsPerPixel() == maxBitsPerPixel)
-                    {
-							return modeArray[i];
-                    }
-				}
-
-				System.out.println("Not 1 DisplayMode holds all of the max properties. This shouldn't happen.");
-                System.out.println(String.format("%d %d %d %d", maxWidth, maxHeight, maxFrequency, maxBitsPerPixel));
-
-				return null;
-			}
-		}
+            return toReturn;
+        }
 
 		System.out.println("No DisplayModes supplied.");
-
 		return null;
 	}
 
@@ -130,7 +96,7 @@ public final class Asteroids
 		try
         {
 			DisplayMode biggestDisplay = largestDisplay(Display.getAvailableDisplayModes());
-			// Display.setFullscreen(true);
+			//Display.setFullscreen(true);
 			Display.setDisplayMode(biggestDisplay);
 			Display.setTitle("Asteroids");
 			//Display.setIcon(...);
@@ -149,8 +115,6 @@ public final class Asteroids
 
 			Display.create();
             Keyboard.create();
-            //Keyboard.enableRepeatEvents(false);
-
 		}
 		catch (LWJGLException e)
         {
@@ -274,12 +238,12 @@ public final class Asteroids
 				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+                //Drawing HUD
                 scoreFont.drawString(0, 0, "Score: " + gameScore, org.newdawn.slick.Color.white);
+                scoreFont.drawString(0, 20, "Lives: " + userCraft.getLives(), org.newdawn.slick.Color.white);
+                scoreFont.drawString(0, 40, "Level: " + gameLevel, org.newdawn.slick.Color.white);
                 scoreFont.drawString(100, 0, " ", org.newdawn.slick.Color.white);
-
-
-				//GL11.glBegin(GL11.GL_QUADS);
-				//GL11.glBegin(GL11.GL_POINTS);
 
 				try
                 {
@@ -293,8 +257,6 @@ public final class Asteroids
 
 			    				//Resetting userCraft to the middle of the screen
 								userCraft.setPosition(new Vector(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2));
-
-								System.out.println("Here");
 
 			    				if(userCraft.getLives() == 0) {
 			    					gameOver = true;
