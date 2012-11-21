@@ -27,6 +27,8 @@ public class Craft extends SpaceObject
 
 	public void draw()
 	{
+        super.draw();
+
 		Vector v1 = new Vector(2 * Constants.DELTA, 0);
 		Vector v2 = new Vector(-Constants.DELTA, -1.25 * Constants.DELTA);
 		Vector v3 = new Vector(-Constants.DELTA, 1.25 * Constants.DELTA);

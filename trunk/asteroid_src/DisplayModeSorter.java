@@ -28,8 +28,7 @@ public class DisplayModeSorter
         HashMap<Integer, ArrayList<DisplayMode>> frequencyMap;
         HashMap<Integer, ArrayList<DisplayMode>> bitsPerPixelMap;
 
-        //Actually returns the second largest DisplayMode in modeArray
-        //Why?
+        //Removes the largest DisplayMode in heightMap, why?
         //Because the largest, is usually the entire screen. However, because
         //of different windowing systems, sometimes there is an unavoidable menu bar at the top of the window
         //Thus, some of the bottom of the window will be cut off and not visible.
@@ -38,8 +37,10 @@ public class DisplayModeSorter
         //Making modeList now the biggest (remaining) heights displaymodes
         modeList = heightMap.get(getBiggestKey(heightMap));
 
-        widthMap = createDisplayModeMap(modeList, SORT_BY_WIDTH);
-        modeList = widthMap.get(getBiggestKey(widthMap));
+        widthMap = createDisplayModeMap(modeList, SORT_BY_WIDTH); //Sorting the remaining displaymodes by width
+        modeList = widthMap.get(getBiggestKey(widthMap)); //Taking the biggest width displaymodes
+
+        //Doing the same thing as above, with frequency, and then bits per pixel
 
         frequencyMap = createDisplayModeMap(modeList, SORT_BY_FREQUENCY);
         modeList = frequencyMap.get(getBiggestKey(frequencyMap));
@@ -47,6 +48,9 @@ public class DisplayModeSorter
         bitsPerPixelMap = createDisplayModeMap(modeList, SORT_BY_BITS_PER_PIXEL);
         modeList = bitsPerPixelMap.get(getBiggestKey(bitsPerPixelMap));
 
+        //At this point, the modeList is probably only 1 element long
+        //If not, I have no idea what has happened, but element 0 should 
+        //probably be good enough.
         return modeList.get(0);
     }
 
@@ -90,6 +94,8 @@ public class DisplayModeSorter
         return toReturn;
     }
 
+    //Given a HashMap that has Integer keys, returns the value
+    //of the largest key.
     private <T> int getBiggestKey(HashMap<Integer, T> map)
     {
         Integer[] keyArray = new Integer[0];
