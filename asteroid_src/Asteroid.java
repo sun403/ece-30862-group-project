@@ -33,14 +33,14 @@ public class Asteroid extends SpaceObject
 				break;
 		}
 
-		radius *= Constants.SCALING_FACTOR;
-
-        //Give each asteroid a random rotation
+        //Give each asteroid a random starting rotation
         theta = Constants.RANDOM_RANGE(0, 360);
 	}
 
 	public void draw()
     {
+        super.draw();
+
         Vector x0 = new Vector(0, 6);
         Vector x1 = new Vector(4, 8);
         Vector x2 = new Vector(7, 4);
@@ -76,11 +76,9 @@ public class Asteroid extends SpaceObject
                     break;
             }
 
-            v.scalarMultiply(size);
             v.flipY();
             v.rotate(theta);
             v.add(position);
-
         }
 
         for(int i = 0; i < asteroidPoints.length - 1; i++) {

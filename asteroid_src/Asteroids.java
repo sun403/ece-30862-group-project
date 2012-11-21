@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.io.*;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
-import java.util.Scanner;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JDialog;
@@ -20,34 +19,31 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
-//import org.lwjgl.util.*;
-//
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.*;
 
-
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.HashMap;
-import java.util.Collections;
 
 //TODO:
 //WHEN THE CRAFT DIES, RESET IT'S MOMENTUM
 public final class Asteroids
 {
-	Font javaFont = new Font("Times New Roman", Font.BOLD, 24);
-    UnicodeFont scoreFont = new UnicodeFont(javaFont, 20, false, false);
-    ColorEffect scoreFontColorEffect = new ColorEffect();
+	private static final Font javaFont = new Font("Times New Roman", Font.BOLD, 24);
+    private static final UnicodeFont scoreFont = new UnicodeFont(javaFont, 20, false, false);
+    private static final ColorEffect scoreFontColorEffect = new ColorEffect();
 
-	boolean debounceShoot = false;
-	boolean debounceThrust = false;
-	boolean gameOver = false;
+	private boolean debounceShoot = false;
+	private boolean debounceThrust = false;
+	private boolean gameOver = false;
 
-	int gameLevel = 1;
-	int gameScore = 0;
+	private int gameLevel = 1;
+	private int gameScore = 0;
 
 
-	public DisplayMode largestDisplay(DisplayMode[] modeArray)
+    //Returns the best DisplayMode to run Asteroids "in"
+	private DisplayMode getBestDisplay(DisplayMode[] modeArray)
 	{
 		if(modeArray.length != 0)
         {
@@ -62,22 +58,24 @@ public final class Asteroids
 		return null;
 	}
 
-	public void addAsteroids()
+    //Adds Asteroid Objects to the screen
+	private void addAsteroids()
 	{
-		for(int i = 0; i < 10 + 5*(gameLevel - 1); i++)
+        //TODO update this shit
+		for(int i = 0; i < 1 + 0*(gameLevel - 1); i++)
         {
 			SpaceObject.allSpaceObjects.add(new Asteroid(new Vector(10 * Math.random(),
 																	10 * Math.random()),
 
-										    new Vector(Constants.SCREEN_WIDTH * Math.random(),
-										    		   Constants.SCREEN_HEIGHT * Math.random()),
+										    new Vector(Constants.WINDOW_WIDTH * Math.random(),
+										    		   Constants.WINDOW_HEIGHT * Math.random()),
 
 										    2));
 		}
 	}
 
     @SuppressWarnings("unchecked")
-    public void initializeScoreFont()
+    private void initializeScoreFont()
     {
         try 
         {
@@ -91,23 +89,23 @@ public final class Asteroids
         }
     }
 
-	public void start()
-	{
+    private void initializeDisplay()
+    {
 		try
         {
-			DisplayMode biggestDisplay = largestDisplay(Display.getAvailableDisplayModes());
+			DisplayMode bestDisplay = getBestDisplay(Display.getAvailableDisplayModes());
 			//Display.setFullscreen(true);
-			Display.setDisplayMode(biggestDisplay);
+			Display.setDisplayMode(bestDisplay);
 			Display.setTitle("Asteroids");
 			//Display.setIcon(...);
 
-			Constants.SCREEN_HEIGHT = biggestDisplay.getHeight();
-			Constants.SCREEN_WIDTH = biggestDisplay.getWidth();
+			Constants.WINDOW_HEIGHT = bestDisplay.getHeight();
+			Constants.WINDOW_WIDTH = bestDisplay.getWidth();
 
-			Constants.SCALING_FACTOR = Constants.SCREEN_WIDTH / 768;
-			Constants.DELTA *= Constants.SCALING_FACTOR;
-			Constants.DELTA_T = .1;
-			Constants.MAX_POSITION = new Vector(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+			//Constants.SCALING_FACTOR = Constants.WINDOW_WIDTH / 768;
+			//Constants.DELTA *= Constants.SCALING_FACTOR;
+			//Constants.DELTA_T = .1;
+			Constants.MAX_POSITION = new Vector(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 
 			SpaceObject.allSpaceObjects = new ArrayList<SpaceObject>();
 			SpaceObject.objectsToAdd = new ArrayList<SpaceObject>();
@@ -122,11 +120,19 @@ public final class Asteroids
 			System.exit(0);
 		}
 
+        return;
+    }
+
+	public void start()
+	{
+        initializeDisplay();
+        initializeScoreFont();
+
 		//Craft that user controls.
 		Craft userCraft = Craft.getInstance();
 
 		//Putting userCraft at the middle of the screen
-		userCraft.setPosition(new Vector(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2));
+		userCraft.setPosition(new Vector(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2));
 
 		SpaceObject.allSpaceObjects.add(userCraft);
 
@@ -134,15 +140,13 @@ public final class Asteroids
 
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, 0, 1, -1);
+		GL11.glOrtho(0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, 0, 1, -1);
 
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 
 		//Everything we draw will be white, so set it once and ft it
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-
-        initializeScoreFont();
 
 		while(!gameOver) 
         {
@@ -191,7 +195,6 @@ public final class Asteroids
                             System.out.println(pauseWindow.getReturnCode());
                             break;
                     }
-
 
                     //Fixes esc key bug
                     //needs to be fixed in lwjgl
@@ -256,7 +259,7 @@ public final class Asteroids
 			    				userCraft.subtractLife();
 
 			    				//Resetting userCraft to the middle of the screen
-								userCraft.setPosition(new Vector(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2));
+								userCraft.setPosition(new Vector(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2));
 
 			    				if(userCraft.getLives() == 0) {
 			    					gameOver = true;
@@ -304,7 +307,6 @@ public final class Asteroids
 				    	addAsteroids();
                         System.out.println("Next level");
 				    }
-
 
 					Display.update();
 				}

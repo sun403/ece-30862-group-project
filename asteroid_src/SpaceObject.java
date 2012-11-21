@@ -59,6 +59,10 @@ public abstract class SpaceObject
 		SpaceObject.objectsToRemove.add(this);
 	}
 
-	/* Each SpaceObject is drawn differently. */
-	abstract public void draw();
+    public void draw()
+    {
+        if(Constants.DRAW_DEBUG_CIRCLE) {
+            Constants.drawCircle(position, radius, Constants.EMPTY_CIRCLE);
+        }
+    }
 }

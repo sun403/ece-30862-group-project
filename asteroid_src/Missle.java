@@ -6,8 +6,10 @@ public class Missle extends SpaceObject
 		super(Constants.MISSLE_MASS, Constants.MISSLE_RADIUS * Constants.SCALING_FACTOR, LAUNCH_VELOCITY, launchPosition);
 	}
 
-	public void draw() {
-		Constants.drawCircle(position, radius);
+	public void draw()
+    {
+        super.draw();
+		Constants.drawCircle(position, radius, Constants.FULL_CIRCLE);
 	}
 
 	//We override updatePosition() because Missles do not rollover the screen.
