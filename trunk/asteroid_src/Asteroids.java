@@ -123,6 +123,17 @@ public final class Asteroids
         else {
             gravityObject.turnOff();
         }
+
+        if(gameOptions.resetHighScores)
+        {
+            for(int i = 0; i < 10; i++) {
+                highScores[i] = new HighScore();
+            }
+        }
+
+        if(gameOptions.saveFile != null) {
+            System.out.println("shit");
+        }
     }
 
     //Returns the best DisplayMode to run Asteroids "in"

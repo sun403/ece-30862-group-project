@@ -3,9 +3,16 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import java.awt.event.*;
 
 public class OptionsDialog extends JFrame
 {
+    private static final String RESET_HIGH_SCORE_BUTTON_TEXT = "Reset High Scores";
+    private static final String RESTORE_SAVED_GAME_BUTTON_TEXT = "Restore Saved Game";
+    private static final int windowWidth = 250;
+    private static final int windowHeight = 147;
+
     private JCheckBox gravitationalObject;
     private JCheckBox visibleGravitationalObject;
     private JCheckBox unlimitedLives;
@@ -16,13 +23,48 @@ public class OptionsDialog extends JFrame
     private JLabel startingLevelLabel;
     private JTextField startingLevelBox;
 
-    private JButton resetHighScore;
+    private JButton resetHighScores;
     private JButton restoreSavedGame;
+
+    private OptionsContainer returnOptions;
+
+    private class ButtonListener implements ActionListener
+    {
+        private OptionsDialog parent;
+
+        public ButtonListener(OptionsDialog parent) {
+            this.parent = parent;
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            String callingButton = ((JButton)e.getSource()).getText();
+
+            if(callingButton.equals(RESTORE_SAVED_GAME_BUTTON_TEXT))
+            {
+                JFileChooser saveFileChooser = new JFileChooser();
+                saveFileChooser.setDialogTitle("Open Game");
+                saveFileChooser.showSaveDialog(parent);
+                returnOptions.saveFile = saveFileChooser.getSelectedFile();
+
+                if(parent != null) {
+                    parent.dispose();
+                }
+            }
+            else if(callingButton.equals(RESET_HIGH_SCORE_BUTTON_TEXT))
+            {
+                returnOptions.resetHighScores = true;
+
+                if(parent != null) {
+                    parent.dispose();
+                }
+            }
+        }
+    }
 
     public OptionsDialog(OptionsContainer currentOptions)
     {
-        int windowWidth = 250;
-        int windowHeight = 147;
+        returnOptions = new OptionsContainer();
         
         setTitle("Options");
         setSize(windowWidth, windowHeight);
@@ -44,11 +86,11 @@ public class OptionsDialog extends JFrame
         startingLevelBox = new JTextField(
                 Integer.toString(currentOptions.startingLevel));
 
-        resetHighScore = new JButton("Reset High Score");
-        restoreSavedGame = new JButton("Restore Saved Game");
+        resetHighScores = new JButton(RESET_HIGH_SCORE_BUTTON_TEXT);
+        restoreSavedGame = new JButton(RESTORE_SAVED_GAME_BUTTON_TEXT);
 
-        //fuck with thei nigger buttons
-
+        resetHighScores.addActionListener(new ButtonListener(this));
+        restoreSavedGame.addActionListener(new ButtonListener(this));
 
         //checkbox.setFocusable(false);
         setLayout(null);
@@ -63,7 +105,7 @@ public class OptionsDialog extends JFrame
         add(startingLevelLabel);
         add(startingLevelBox);
 
-        add(resetHighScore);
+        add(resetHighScores);
         add(restoreSavedGame);
 
         int initialOffset = 0;
@@ -83,20 +125,18 @@ public class OptionsDialog extends JFrame
         startingLevelBox.setBounds(initialOffset, numberOfAsteroidsLabel.getY() + deltaY, textBoxWidth, height);
         startingLevelLabel.setBounds(initialOffset + labelOffset, startingLevelBox.getY(), labelWidth, height);
         
-        resetHighScore.setBounds(initialOffset, startingLevelLabel.getY() + deltaY, windowWidth, height);
-        restoreSavedGame.setBounds(initialOffset, resetHighScore.getY() + deltaY, windowWidth, height);
+        resetHighScores.setBounds(initialOffset, startingLevelLabel.getY() + deltaY, windowWidth, height);
+        restoreSavedGame.setBounds(initialOffset, resetHighScores.getY() + deltaY, windowWidth, height);
     }
 
     public OptionsContainer getOptions()
     {
-        OptionsContainer options = new OptionsContainer();
+        returnOptions.gravitationalObject = gravitationalObject.isSelected();
+        returnOptions.visibleGravitationalObject = visibleGravitationalObject.isSelected();
+        returnOptions.unlimitedLives = unlimitedLives.isSelected();
+        returnOptions.numberOfAsteroidsPerLevel = Integer.parseInt(numberOfAsteroidsBox.getText());
+        returnOptions.startingLevel = Integer.parseInt(startingLevelBox.getText());
 
-        options.gravitationalObject = gravitationalObject.isSelected();
-        options.visibleGravitationalObject = visibleGravitationalObject.isSelected();
-        options.unlimitedLives = unlimitedLives.isSelected();
-        options.numberOfAsteroidsPerLevel = Integer.parseInt(numberOfAsteroidsBox.getText());
-        options.startingLevel = Integer.parseInt(startingLevelBox.getText());
-
-        return options;
+        return returnOptions;
     }
 }
