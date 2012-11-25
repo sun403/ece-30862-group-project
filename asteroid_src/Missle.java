@@ -2,8 +2,8 @@ import org.lwjgl.opengl.*;
 
 public class Missle extends SpaceObject
 {
-	public Missle(Vector LAUNCH_VELOCITY, Vector launchPosition) {
-		super(Constants.MISSLE_MASS, Constants.MISSLE_RADIUS * Constants.SCALING_FACTOR, LAUNCH_VELOCITY, launchPosition);
+	public Missle(Vector launchVelocity, Vector launchPosition) {
+		super(Constants.MISSLE_MASS, Constants.MISSLE_RADIUS * Constants.SCALING_FACTOR, launchVelocity, launchPosition);
 	}
 
 	public void draw()
