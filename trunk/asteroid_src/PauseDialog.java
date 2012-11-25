@@ -1,7 +1,9 @@
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import java.awt.event.*;
+import java.io.File;
 
 public class PauseDialog extends JFrame
 {
@@ -22,6 +24,7 @@ public class PauseDialog extends JFrame
     private OptionsContainer gameOptions;
 
     private int returnCode = -1;
+    private File saveFile;
 
     private class CloseListener implements WindowListener
     {
@@ -63,6 +66,14 @@ public class PauseDialog extends JFrame
             }
             else if(callingButton.equals(SAVE_BUTTON_TEXT))
             {
+                //nigger style
+                //saveFileChooser.setVisible(true);
+                JFileChooser saveFileChooser = new JFileChooser();
+                saveFileChooser.setDialogTitle("Save Game");
+                saveFileChooser.showSaveDialog(parent);
+
+                saveFile = saveFileChooser.getSelectedFile();
+
                 if(parent != null)
                 {
                     parent.setReturnCode(Constants.SAVE_GAME);
@@ -92,9 +103,9 @@ public class PauseDialog extends JFrame
         }
     }
 
-    public PauseDialog()
+    public PauseDialog(OptionsContainer currentOptions)
     {
-        optionsWindow = new OptionsDialog();
+        optionsWindow = new OptionsDialog(currentOptions);
         optionsWindow.addWindowListener(new CloseListener());
 
         setTitle(WINDOW_TITLE);
@@ -146,5 +157,9 @@ public class PauseDialog extends JFrame
 
     public int getReturnCode() {
         return returnCode;
+    }
+
+    public File getSaveFile() {
+        return saveFile;
     }
 }

@@ -4,6 +4,10 @@ public class Vector
 	public double y;
 
 	//I'm forgoing accessors for (hopefully) performance increases.
+    
+    public Vector() {
+        x = 0; y = 0;
+    }
 
 	public Vector(Vector v) {
 		x = v.x;
@@ -49,7 +53,32 @@ public class Vector
 		return Math.sqrt(Math.pow(x - v.x, 2) + Math.pow(y - v.y, 2));
 	}
 
+    public double getMagnitude() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
+
+    //return this - that
+    public Vector difference(Vector v) {
+        return new Vector(x - v.x, y - v.y);
+    }
+
+    public Vector unitVector() {
+        return new Vector(x / getMagnitude(), y / getMagnitude());
+    }
+
 	public Vector copy() {
 		return new Vector(this);
 	}
+
+    public String toString() {
+        return String.format("<%f, %f>", x, y);
+    }
+
+    //returns in degrees
+    public double angle()
+    {
+        //baseAngle is on [0, 2*PI)
+        double baseAngle = Math.atan2(y, x) + Math.PI;
+        return Math.toDegrees(baseAngle);
+    }
 }

@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public abstract class SpaceObject
+public class SpaceObject
 {
 	public static ArrayList<SpaceObject> allSpaceObjects;
 	public static ArrayList<SpaceObject> objectsToAdd;
@@ -11,24 +11,50 @@ public abstract class SpaceObject
 	protected Vector velocity;
 	protected Vector position;
 
-	//Constructors
-	public SpaceObject() {}
+	public SpaceObject() {
+        this(0, 0, new Vector(), new Vector());
+    }
 
-	public SpaceObject(double newMass, double newRadius, Vector newVelocity, Vector newPosition)
+	public SpaceObject(double newMass, double newRadius, 
+                       Vector newVelocity, Vector newPosition)
 	{
-		mass = newMass;
-		radius = newRadius;
-		velocity = newVelocity;
-		position = newPosition;
+        setMass(newMass);
+        setRadius(newRadius);
+        setVelocity(newVelocity);
+        setPosition(newPosition);
 	}
+
+    public void setMass(double newMass) {
+        mass = newMass;
+    }
+
+    public void setRadius(double newRadius) {
+        radius = newRadius;
+    }
+
+    public void setVelocity(Vector newVelocity) {
+        velocity = newVelocity;
+    }
+
+    public void setPosition(Vector newPosition) {
+        position = newPosition;
+    }
 
 	public Vector getPosition() {
 		return position;
 	}
 
-	public void setPosition(Vector newPosition) {
-		position = newPosition;
-	}
+    public double getMass() {
+        return mass;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public Vector getVelocity() {
+        return velocity;
+    }
 
 	public void updatePosition()
 	{

@@ -19,7 +19,7 @@ public class OptionsDialog extends JFrame
     private JButton resetHighScore;
     private JButton restoreSavedGame;
 
-    public OptionsDialog()
+    public OptionsDialog(OptionsContainer currentOptions)
     {
         int windowWidth = 250;
         int windowHeight = 147;
@@ -29,18 +29,26 @@ public class OptionsDialog extends JFrame
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        gravitationalObject = new JCheckBox("Gravitational Object", false);
-        visibleGravitationalObject = new JCheckBox("Visible Gravitational Object", false);
-        unlimitedLives = new JCheckBox("Unlimited Lives", false);
+        gravitationalObject = new JCheckBox(
+                "Gravitational Object", currentOptions.gravitationalObject);
+        visibleGravitationalObject = new JCheckBox(
+                "Visible Gravitational Object", currentOptions.visibleGravitationalObject);
+        unlimitedLives = new JCheckBox(
+                "Unlimited Lives", currentOptions.unlimitedLives);
 
         numberOfAsteroidsLabel = new JLabel("Number of Asteroids per level");
-        numberOfAsteroidsBox = new JTextField("10");
+        numberOfAsteroidsBox = new JTextField(
+                Integer.toString(currentOptions.numberOfAsteroidsPerLevel));
 
         startingLevelLabel = new JLabel("Starting Level");
-        startingLevelBox = new JTextField("1");
+        startingLevelBox = new JTextField(
+                Integer.toString(currentOptions.startingLevel));
 
         resetHighScore = new JButton("Reset High Score");
         restoreSavedGame = new JButton("Restore Saved Game");
+
+        //fuck with thei nigger buttons
+
 
         //checkbox.setFocusable(false);
         setLayout(null);
