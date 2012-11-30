@@ -1,6 +1,7 @@
 import java.io.File;
+import java.io.*;
 
-public class OptionsContainer
+public class OptionsContainer implements Serializable
 {
     public boolean gravitationalObject = false;
     public boolean visibleGravitationalObject = false;

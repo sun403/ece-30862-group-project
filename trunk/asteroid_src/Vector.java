@@ -1,4 +1,6 @@
-public class Vector
+import java.io.*;
+
+public class Vector implements Serializable
 {
 	public double x;
 	public double y;

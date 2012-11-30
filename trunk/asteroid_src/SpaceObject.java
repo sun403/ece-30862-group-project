@@ -1,6 +1,7 @@
 import java.util.ArrayList;
+import java.io.*;
 
-public class SpaceObject
+public class SpaceObject implements Serializable
 {
 	public static ArrayList<SpaceObject> allSpaceObjects;
 	public static ArrayList<SpaceObject> objectsToAdd;

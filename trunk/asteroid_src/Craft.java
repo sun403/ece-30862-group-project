@@ -1,6 +1,7 @@
+import java.io.*;
 import org.lwjgl.opengl.*;
 
-public class Craft extends SpaceObject
+public class Craft extends SpaceObject implements Serializable
 {
 	//Controls how the craft is rotated.
     //-90 points north

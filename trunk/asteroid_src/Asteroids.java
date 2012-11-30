@@ -4,17 +4,6 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import java.io.*;
-
-import java.util.ArrayList;
-
-import java.io.*;
-import java.nio.IntBuffer;
-import java.nio.FloatBuffer;
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.JDialog;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
@@ -23,11 +12,19 @@ import org.lwjgl.openal.AL10;
 import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.*;
 
+import java.io.*;
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JDialog;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public final class Asteroids
+public class Asteroids implements Serializable
 {
 	private static final Font javaFont = new Font("Times New Roman", Font.BOLD, 24);
     private static final UnicodeFont scoreFont = new UnicodeFont(javaFont, 20, false, false);
@@ -132,7 +129,7 @@ public final class Asteroids
         }
 
         if(gameOptions.saveFile != null) {
-            System.out.println("shit");
+            loadGame(gameOptions.saveFile);
         }
     }
 
@@ -308,17 +305,39 @@ public final class Asteroids
 
     private void saveGame(File saveFile)
     {
-        try {
-        FileWriter writeStream = new FileWriter(saveFile);
-        BufferedWriter outputFile = new BufferedWriter(writeStream);
+        System.out.println("saving game");
+        try
+        {
+            FileOutputStream outputFile = new FileOutputStream(saveFile);
+            ObjectOutput output = new ObjectOutputStream(outputFile);
 
-        outputFile.write("suck a dick nigger");
-        //no newline
-        outputFile.write("asshole!");
+            Vector v = new Vector(12, 13);
+            //output.writeObject(v);
+            output.writeObject(this);
 
-        outputFile.close();
-        writeStream.close();
-        } catch(Exception e) { System.out.println(e); }
+            output.flush();
+            outputFile.close();
+        }
+        catch(IOException i) { System.out.println(i); }
+    }
+
+    private void loadGame(File saveFile)
+    {
+        System.out.println("Loading game");
+        try
+        {
+            FileInputStream inputFile = new FileInputStream(saveFile);
+            ObjectInputStream input = new ObjectInputStream(inputFile);
+
+            //MAKE THIS WORK AND WE'RE BASICALLY DONE
+            //this = (Asteroids)input.readObject();
+            input.readObject();
+            input.close();
+            inputFile.close();
+
+        }
+        catch(IOException i) { System.out.println(i); }
+        catch(ClassNotFoundException c) { System.out.println(c); }
     }
 
     private void handleEscapeButton() throws QuitGameException

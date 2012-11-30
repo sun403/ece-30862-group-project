@@ -1,6 +1,7 @@
+import java.io.*;
 import org.lwjgl.opengl.*;
 
-public class Asteroid extends SpaceObject
+public class Asteroid extends SpaceObject implements Serializable
 {
 	private int size;
     private double theta;
