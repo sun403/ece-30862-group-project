@@ -1,6 +1,7 @@
 import org.lwjgl.opengl.*;
+import java.io.*;
 
-public class Missle extends SpaceObject
+public class Missle extends SpaceObject implements Serializable
 {
 	public Missle(Vector launchVelocity, Vector launchPosition) {
 		super(Constants.MISSLE_MASS, Constants.MISSLE_RADIUS * Constants.SCALING_FACTOR, launchVelocity, launchPosition);
