@@ -96,20 +96,16 @@ public class PauseDialog extends JFrame
                     parent.setReturnCode(Constants.CONTINUE_GAME_WITH_NEW_OPTIONS);
                 }
             }
-            else {
-                System.out.println("this called me?");
-                System.out.println(callingButton);
-            }
         }
     }
 
     public PauseDialog(OptionsContainer currentOptions)
     {
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         optionsWindow = new OptionsDialog(currentOptions);
         optionsWindow.addWindowListener(new CloseListener());
 
         setTitle(WINDOW_TITLE);
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         continueButton = new JButton(CONTINUE_BUTTON_TEXT);

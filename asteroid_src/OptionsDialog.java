@@ -66,8 +66,8 @@ public class OptionsDialog extends JFrame
     {
         returnOptions = new OptionsContainer();
         
-        setTitle("Options");
         setSize(windowWidth, windowHeight);
+        setTitle("Options");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -92,7 +92,6 @@ public class OptionsDialog extends JFrame
         resetHighScores.addActionListener(new ButtonListener(this));
         restoreSavedGame.addActionListener(new ButtonListener(this));
 
-        //checkbox.setFocusable(false);
         setLayout(null);
 
         add(gravitationalObject);

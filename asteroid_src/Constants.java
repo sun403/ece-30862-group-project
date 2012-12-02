@@ -35,7 +35,7 @@ public final class Constants
     //and the user's craft's starting position
     //Without this, an asteroid might spawn on top of the craft
     //causing a loss of life instantly.
-    public static final double MIN_BUFFER_DISTANCE = 5;
+    public static final double MIN_BUFFER_DISTANCE = 50;
 
 	public static final double SMALL_ASTEROID_RADIUS = 
         SMALL_ASTEROID_SCALE * ASTEROID_RADIUS * (1 - ERROR_RANGE);
@@ -53,6 +53,10 @@ public final class Constants
 
 	public static final double THRUSTER_FORCE = 500.0;
 	public static final double MISSLE_LAUNCH_VELOCITY = 120.0;
+
+    public static final int SHOOT_SOUND = 0;
+    public static final int EXPLOSION_SOUND = 1;
+    public static final int UFO_SOUND = 2;
 
     //can't be final
 
@@ -91,12 +95,10 @@ public final class Constants
         int numberOfCircleIncrements = 72;
         double twoPI = 2 * Math.PI;
         
-		//GL11.glBegin(GL11.GL_TRIANGLE_FAN);
         GL11.glBegin(mode);
 		GL11.glVertex2d(center.x, center.y);
 
         //Draws a circle by drawing a bunch of rectthetas. 
-        //TODO is this wrong? x + sin?
 		for(double theta = 0; theta <= twoPI; theta += twoPI / numberOfCircleIncrements) {
 			GL11.glVertex2d(center.x + (Math.sin(theta) * radius), center.y + (Math.cos(theta) * radius));
 		}

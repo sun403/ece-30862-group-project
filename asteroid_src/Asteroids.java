@@ -6,8 +6,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.*;
@@ -23,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.lang.reflect.*;
 
 public class Asteroids implements Serializable
 {
@@ -31,25 +30,28 @@ public class Asteroids implements Serializable
     private static final ColorEffect scoreFontColorEffect = new ColorEffect();
     private static final File highScoresFile = new File("high_scores.txt");
 
-    private static UserCraft userCraft;
-    private static AlienCraft alienCraft;
-    private static GravitationalObject gravityObject;
+    private static SoundPlayer soundPlayer;
 
-	private boolean debounceShoot = false;
-	private boolean debounceThrust = false;
-	private boolean gameOver = false;
-    private boolean alienPresent = false;
+    public static UserCraft userCraft;
+    public static AlienCraft alienCraft;
+    public static GravitationalObject gravityObject;
 
-	private int gameScore;
-	private int gameLevel;
+	public Boolean debounceShoot = false;
+	public Boolean debounceThrust = false;
+	public Boolean gameOver = false;
+    public Boolean alienPresent = false;
 
-    private HighScore[] highScores;
+	public Integer gameScore;
+	public Integer gameLevel;
+
+    public HighScore[] highScores;
     
-    private OptionsContainer gameOptions;
+    public OptionsContainer gameOptions;
 
     public Asteroids()
     {
         highScores = new HighScore[10];
+        soundPlayer = new SoundPlayer();
 
         SpaceObject.allSpaceObjects = new ArrayList<SpaceObject>();
         SpaceObject.objectsToAdd = new ArrayList<SpaceObject>();
@@ -59,8 +61,6 @@ public class Asteroids implements Serializable
         initializeScoreFont();
 
         alienCraft = AlienCraft.getInstance();
-        //alienCraft.setPosition(new Vector(100, 100));
-        //SpaceObject.allSpaceObjects.add(alienCraft);
 
         userCraft = UserCraft.getInstance();
         userCraft.resetPosition();
@@ -144,8 +144,6 @@ public class Asteroids implements Serializable
             return toReturn;
         }
 
-        //TODO raise an exception
-		System.out.println("No DisplayModes supplied.");
 		return null;
 	}
 
@@ -159,6 +157,7 @@ public class Asteroids implements Serializable
 
             do
             {
+                //TODO
                 //what is this constant
                 toAdd = new Asteroid(4 * gameLevel);
                 toAddPosition = toAdd.getPosition();
@@ -181,7 +180,8 @@ public class Asteroids implements Serializable
         }
         catch(SlickException s)
         {
-            System.out.println("wtf");
+            System.out.println(s);
+            System.exit(-1);
         }
     }
 
@@ -190,10 +190,8 @@ public class Asteroids implements Serializable
 		try
         {
 			DisplayMode bestDisplay = getBestDisplay(Display.getAvailableDisplayModes());
-			//Display.setFullscreen(true);
 			Display.setDisplayMode(bestDisplay);
 			Display.setTitle("Asteroids");
-			//Display.setIcon(...);
 
 			Constants.WINDOW_HEIGHT = bestDisplay.getHeight();
 			Constants.WINDOW_WIDTH = bestDisplay.getWidth();
@@ -206,7 +204,7 @@ public class Asteroids implements Serializable
 		catch (LWJGLException e)
         {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 
         return;
@@ -217,6 +215,8 @@ public class Asteroids implements Serializable
         scoreFont.drawString(0, 0, "Score: " + gameScore, org.newdawn.slick.Color.white);
         scoreFont.drawString(0, 20, "Lives: " + userCraft.getLives(), org.newdawn.slick.Color.white);
         scoreFont.drawString(0, 40, "Level: " + gameLevel, org.newdawn.slick.Color.white);
+
+        //Don't know why this is necessary, but without it, this won't work
         scoreFont.drawString(100, 0, " ", org.newdawn.slick.Color.white);
     }
 
@@ -246,9 +246,12 @@ public class Asteroids implements Serializable
                             !gameOptions.unlimitedLives) {
                         gameOver = true;
                     }
-                    else {
+                    else
+                    {
                         crashed = true;
                     }
+
+                    soundPlayer.play(Constants.EXPLOSION_SOUND);
                 }
             }
 
@@ -265,6 +268,7 @@ public class Asteroids implements Serializable
                             s.delete();
                             a.delete();
                             gameScore += 5;
+                            soundPlayer.play(Constants.EXPLOSION_SOUND);
                         }
                     }
                     else if(a instanceof AlienCraft)
@@ -280,6 +284,8 @@ public class Asteroids implements Serializable
                             {
                                 aCraft.delete();
                                 alienPresent = false;
+                                soundPlayer.play(Constants.EXPLOSION_SOUND);
+                                soundPlayer.stopPlay(Constants.UFO_SOUND);
                             }
                         }
                     }
@@ -305,45 +311,79 @@ public class Asteroids implements Serializable
 
     private void saveGame(File saveFile)
     {
-        System.out.println("saving game");
         try
         {
             FileOutputStream outputFile = new FileOutputStream(saveFile);
             ObjectOutput output = new ObjectOutputStream(outputFile);
 
-            Vector v = new Vector(12, 13);
-            //output.writeObject(v);
             output.writeObject(this);
+            output.writeObject(SpaceObject.allSpaceObjects);
 
             output.flush();
             outputFile.close();
         }
-        catch(IOException i) { System.out.println(i); }
+        catch(IOException i)
+        {
+            System.out.println(i);
+            System.exit(-1);
+        }
     }
 
     private void loadGame(File saveFile)
     {
-        System.out.println("Loading game");
         try
         {
             FileInputStream inputFile = new FileInputStream(saveFile);
             ObjectInputStream input = new ObjectInputStream(inputFile);
 
-            //MAKE THIS WORK AND WE'RE BASICALLY DONE
-            //this = (Asteroids)input.readObject();
-            input.readObject();
+            Asteroids loadedGame = (Asteroids)input.readObject();
+            SpaceObject.allSpaceObjects = (ArrayList<SpaceObject>)(input.readObject());
+
             input.close();
             inputFile.close();
 
+            Field[] loadedFields = loadedGame.getClass().getFields();
+            Field[] thisFields = this.getClass().getFields();
+
+            for(Field loadedField : loadedFields)
+            {
+                for(Field thisField : thisFields)
+                {
+                    if(thisField.getName().equals(loadedField.getName())) 
+                    {
+                        try {
+                            thisField.set(this, loadedField.get(loadedGame));
+                        }
+                        catch(Exception e)
+                        {
+                            System.out.println(e);
+                            System.exit(-1);
+                        }
+                    }
+                }
+            }
+
+            for(SpaceObject s : SpaceObject.allSpaceObjects)
+            {
+                if(s instanceof UserCraft) {
+                    userCraft = (UserCraft)s;
+                }
+            }
         }
-        catch(IOException i) { System.out.println(i); }
-        catch(ClassNotFoundException c) { System.out.println(c); }
+        catch(IOException i)
+        {
+            System.out.println(i);
+            System.exit(-1);
+        }
+        catch(ClassNotFoundException c)
+        {
+            System.out.println(c);
+            System.exit(-1);
+        }
     }
 
     private void handleEscapeButton() throws QuitGameException
     {
-        System.out.println("ESC BUTTON PRESSED");
-
         PauseDialog pauseWindow = new PauseDialog(gameOptions);
         pauseWindow.setVisible(true);
 
@@ -354,45 +394,46 @@ public class Asteroids implements Serializable
                 pauseWindow.wait();
             }
         }
-        catch(InterruptedException i) {System.out.println("help me"); }
+        catch(InterruptedException i) 
+        {
+            System.out.println(i);
+            System.exit(-1);
+        }
 
         switch(pauseWindow.getReturnCode())
         {
             case Constants.QUIT_GAME:
-                System.out.println("Asteroids got QUIT_GAME");
                 gameOver = true;
                 throw new QuitGameException();
 
             case Constants.CONTINUE_GAME:
-                System.out.println("Asteroids got CONTINUE_GAME");
                 break;
 
            case Constants.CONTINUE_GAME_WITH_NEW_OPTIONS:
-                System.out.println("Asteroids got CONTINUE_GAME_WITH_NEW_OPTIONS");
                 gameOptions = pauseWindow.getOptions();
                 applyGameOptions();
                 break;
 
            case Constants.SAVE_GAME:
-                System.out.println("Asteroids got SAVE_GAME");
                 saveGame(pauseWindow.getSaveFile());
                 break;
 
            default:
-                System.out.println("bad");
                 System.out.println(pauseWindow.getReturnCode());
                 break;
         }
 
         //Fixes esc key bug
-        //needs to be fixed in lwjgl
+        //Needs to be fixed in lwjgl
         try 
         {
             Keyboard.destroy();
             Keyboard.create();
         }
-        catch(LWJGLException e) {
+        catch(LWJGLException e)
+        {
             System.out.println(e);
+            System.exit(-1);
         }
     }
 
@@ -428,7 +469,7 @@ public class Asteroids implements Serializable
             if(!debounceShoot)
             {
                 userCraft.shoot();
-                //soundPlayer.play(0);
+                soundPlayer.play(Constants.SHOOT_SOUND);
                 debounceShoot = true;
             }
         }
@@ -483,11 +524,14 @@ public class Asteroids implements Serializable
                         alienCraft.resetPosition();
                         alienCraft.resetLives();
                         SpaceObject.allSpaceObjects.add(alienCraft);
+                        soundPlayer.play(Constants.UFO_SOUND);
                     }
                     if(alienPresent)
                     {
-                        if(Math.random() < 0.005 * gameLevel) {
+                        if(Math.random() < 0.005 * gameLevel)
+                        {
                             alienCraft.shoot();
+                            soundPlayer.play(Constants.SHOOT_SOUND);
                         }
                     }
 
@@ -519,12 +563,15 @@ public class Asteroids implements Serializable
         catch(QuitGameException e) {}
 
 		try {
-			//soundPlayer.finalize();
+			soundPlayer.finalize();
 		}
-		catch(Throwable t) {}
+		catch(Throwable t) 
+        {
+            System.out.println(t);
+            System.exit(-1);
+        }
 
 		Display.destroy();
-
 
         updateHighScores();
         displayHighScores();
@@ -535,7 +582,10 @@ public class Asteroids implements Serializable
         int i;
         int index = -1;
 
-        //game over.
+        if(gameScore == 0) {
+            gameScore--;
+        }
+
         for(i = 0; i < highScores.length; i++)
         {
             if(highScores[i].getScore() < gameScore)
@@ -564,9 +614,15 @@ public class Asteroids implements Serializable
                     box.wait();
                 }
             }
-            catch(InterruptedException z) {System.out.println("help me"); }
+            catch(InterruptedException z)
+            {
+                System.out.println(z);
+                System.exit(-1);
+            }
 
-            highScores[index] = new HighScore(box.getName(), gameScore);
+            if(box.getName().length() > 0) {
+                highScores[index] = new HighScore(box.getName(), gameScore);
+            }
 
             saveHighScores();
         }
@@ -586,8 +642,10 @@ public class Asteroids implements Serializable
             outputFile.close();
             writeStream.close();
         }
-        catch(IOException i) {
+        catch(IOException i)
+        {
             System.out.println(i);
+            System.exit(-1);
         }
     }
 
@@ -602,7 +660,11 @@ public class Asteroids implements Serializable
                 scoreDisplay.wait();
             }
         }
-        catch(InterruptedException z) {System.out.println("help me"); }
+        catch(InterruptedException z)
+        {
+            System.out.println(z);
+            System.exit(-1);
+        }
     }
 
     
