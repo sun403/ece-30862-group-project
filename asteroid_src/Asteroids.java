@@ -329,6 +329,7 @@ public class Asteroids implements Serializable
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void loadGame(File saveFile)
     {
         try
