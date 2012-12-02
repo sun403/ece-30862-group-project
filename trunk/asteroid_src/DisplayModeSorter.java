@@ -14,15 +14,12 @@ public class DisplayModeSorter
 
     private ArrayList<DisplayMode> modeList;
 
-    //HashMap<Integer, ArrayList<DisplayMode>> 
-
     public DisplayModeSorter(DisplayMode[] modeArray) { 
         modeList = new ArrayList<DisplayMode>(Arrays.asList(modeArray));
     }
 
     public DisplayMode getBestDisplayMode()
     {
-
         HashMap<Integer, ArrayList<DisplayMode>> heightMap = createDisplayModeMap(modeList, SORT_BY_HEIGHT);
         HashMap<Integer, ArrayList<DisplayMode>> widthMap;
         HashMap<Integer, ArrayList<DisplayMode>> frequencyMap;

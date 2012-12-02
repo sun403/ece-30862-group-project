@@ -2,24 +2,40 @@ import java.io.*;
 
 public class Vector implements Serializable
 {
-	public double x;
-	public double y;
-
-	//I'm forgoing accessors for (hopefully) performance increases.
+	private double x;
+	private double y;
     
     public Vector() {
         x = 0; y = 0;
     }
 
-	public Vector(Vector v) {
-		x = v.x;
-		y = v.y;
+	public Vector(Vector v)
+    {
+		x = v.getX();
+		y = v.getY();
 	}
 
-	public Vector(double newX, double newY) {
+	public Vector(double newX, double newY)
+    {
 		x = newX;
 		y = newY;
 	}
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setX(double newX) {
+        x = newX;
+    }
+
+    public void setY(double newY) {
+        y = newY;
+    }
 
 	public Vector scalarProduct(double scalar) {
 		return new Vector(scalar * x, scalar * y);
@@ -31,15 +47,15 @@ public class Vector implements Serializable
     }
 
 	public void add(Vector v) {
-		x += v.x;
-		y += v.y;
+		x += v.getX();
+		y += v.getY();
 	}
 
     public void flipY() {
         y *= -1;
     }
 
-	/* Theta = in degrees. */
+    //takes a degrees measurement
 	public void rotate(double theta)
 	{
 		double xOld = x;

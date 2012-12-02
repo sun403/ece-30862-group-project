@@ -96,13 +96,29 @@ public final class Constants
         double twoPI = 2 * Math.PI;
         
         GL11.glBegin(mode);
-		GL11.glVertex2d(center.x, center.y);
+		GL11.glVertex2d(center.getX(), center.getY());
 
         //Draws a circle by drawing a bunch of rectthetas. 
 		for(double theta = 0; theta <= twoPI; theta += twoPI / numberOfCircleIncrements) {
-			GL11.glVertex2d(center.x + (Math.sin(theta) * radius), center.y + (Math.cos(theta) * radius));
+			GL11.glVertex2d(center.getX() + (Math.sin(theta) * radius), center.getY() + (Math.cos(theta) * radius));
 		}
 
 		GL11.glEnd();
 	}
+
+    public static Vector RANDOM_POSITION()
+    {
+        return new Vector(
+                Constants.WINDOW_WIDTH * Math.random(),
+                Constants.WINDOW_HEIGHT * Math.random());
+    }
+
+    public static Vector RANDOM_VELOCITY_WITH_MAGNITUDE(double magnitude)
+    {
+        double randomTheta = Constants.RANDOM_RANGE(0, 2 * Math.PI);
+        return new Vector(
+                magnitude * Math.cos(randomTheta), 
+                magnitude * Math.sin(randomTheta));
+    }
+
 }
