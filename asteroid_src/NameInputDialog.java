@@ -33,6 +33,8 @@ public class NameInputDialog extends JFrame
                 if(parent != null)
                 {
                     inputtedString = nameBox.getText();
+
+                    //Initials are only allowed to be 4 characters or less
                     if(inputtedString.length() > 5) {
                         inputtedString = inputtedString.substring(0, 5);
                     }

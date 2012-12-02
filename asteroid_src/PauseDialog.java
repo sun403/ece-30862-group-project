@@ -66,8 +66,6 @@ public class PauseDialog extends JFrame
             }
             else if(callingButton.equals(SAVE_BUTTON_TEXT))
             {
-                //nigger style
-                //saveFileChooser.setVisible(true);
                 JFileChooser saveFileChooser = new JFileChooser();
                 saveFileChooser.setDialogTitle("Save Game");
                 saveFileChooser.showSaveDialog(parent);

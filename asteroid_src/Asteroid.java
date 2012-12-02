@@ -10,23 +10,11 @@ public class Asteroid extends SpaceObject implements Serializable
     {
         this(null, null, Constants.LARGE_ASTEROID);
 
-        velocity = randomVelocityWithMagnitude(asteroidSpeed);
-        position = randomPosition();
-    }
+        //To make the game differnet every time, the asteroids
+        //start out with random velocities and positions
+        setVelocity(Consants.RANDOM_VELOCITY_WITH_MAGNIUDE(asteroidSpeed));
+        setPosition(Constants.RANDOM_POSITION());
 
-    private Vector randomPosition()
-    {
-        return new Vector(
-                Constants.WINDOW_WIDTH * Math.random(),
-                Constants.WINDOW_HEIGHT * Math.random());
-    }
-
-    private Vector randomVelocityWithMagnitude(int magnitude)
-    {
-        double randomTheta = Constants.RANDOM_RANGE(0, 2 * Math.PI);
-        return new Vector(
-                magnitude * Math.cos(randomTheta), 
-                magnitude * Math.sin(randomTheta));
     }
 
 	public Asteroid(Vector initialVelocity, Vector initialPosition, int size)
@@ -37,22 +25,24 @@ public class Asteroid extends SpaceObject implements Serializable
 		switch(size)
         {
 			case Constants.SMALL_ASTEROID:
-				mass = Constants.SMALL_ASTEROID_MASS;
-				radius = Constants.SMALL_ASTEROID_RADIUS;
+				setMass(Constants.SMALL_ASTEROID_MASS);
+				setRadius(Constants.SMALL_ASTEROID_RADIUS);
 				break;
 
 			case Constants.MEDIUM_ASTEROID:
-				mass = Constants.MEDIUM_ASTEROID_MASS;
-				radius = Constants.MEDIUM_ASTEROID_RADIUS;
+				setMass(Constants.MEDIUM_ASTEROID_MASS);
+                setRadius(Constants.MEDIUM_ASTEROID_RADIUS);
 				break;
 
 			case Constants.LARGE_ASTEROID:
-				mass = Constants.LARGE_ASTEROID_MASS;
-				radius = Constants.LARGE_ASTEROID_RADIUS;
+				setMass(Constants.LARGE_ASTEROID_MASS);
+				setRadius(Constants.LARGE_ASTEROID_RADIUS);
 				break;
 
+            //Should never happen
 			default:
-				System.exit(-1);
+				setMass(Constants.SMALL_ASTEROID_MASS);
+				setRadius(Constants.SMALL_ASTEROID_RADIUS);
 				break;
 		}
 
@@ -64,6 +54,8 @@ public class Asteroid extends SpaceObject implements Serializable
     {
         super.draw();
 
+        //The points that make up the Asteroid for drawing.
+        //Can't put these in Constants, because they get altered below.
         Vector x0 = new Vector(0, 6);
         Vector x1 = new Vector(4, 8);
         Vector x2 = new Vector(7, 4);
@@ -101,13 +93,15 @@ public class Asteroid extends SpaceObject implements Serializable
 
             v.flipY();
             v.rotate(theta);
-            v.add(position);
+            v.add(getPosition());
         }
 
+        //Playing connect the dots...
         for(int i = 0; i < asteroidPoints.length - 1; i++) {
             new Line(asteroidPoints[i], asteroidPoints[i + 1]).draw();
         }
 
+        //Drawing a line from the last point to the first point
         new Line(asteroidPoints[asteroidPoints.length - 1], asteroidPoints[0]).draw();
 	}
 
@@ -117,17 +111,20 @@ public class Asteroid extends SpaceObject implements Serializable
 
         double newMass = 0;
 
-        if(mass == Constants.LARGE_ASTEROID_MASS) {
+        if(getMass() == Constants.LARGE_ASTEROID_MASS) {
             newMass = Constants.MEDIUM_ASTEROID_MASS;
         }
-        else if(mass == Constants.MEDIUM_ASTEROID_MASS) {
+        else if(getMass() == Constants.MEDIUM_ASTEROID_MASS) {
             newMass = Constants.SMALL_ASTEROID_MASS;
         }
 
+        //We delete this asteroid, but spawn 3 smaller asteroids.
+        //One of which is heading in the same direction as this one,
+        //the other 2 are heading 45 degrees and -45 degrees offset
+        //from the current direction.
 		if(this.size > 0)
         {
             Vector totalMomentum = getVelocity().scalarProduct(getMass());
-
             double originalTheta = totalMomentum.angle();
 
             Vector[] childVelocities = { new Vector(), new Vector(), new Vector() };
@@ -143,39 +140,41 @@ public class Asteroid extends SpaceObject implements Serializable
 
             for(int i = 0; i < childVelocities.length; i++)
             {
-                childVelocities[i].x = (getMass() * velocity.getMagnitude())/(3 * newMass * Math.sqrt(1 + Math.pow(childSlopes[i], 2)));
+                //These equations conserve momentum. I figured them out one day,
+                //with a pencil, and a lot of paper. Do not try to understand them.
+                childVelocities[i].setX((getMass() * getVelocity().getMagnitude()) / 
+                                        (3 * newMass * Math.sqrt(1 + Math.pow(childSlopes[i], 2))));
 
-                childVelocities[i].y = childVelocities[i].x * childSlopes[i];
+                childVelocities[i].setY(childVelocities[i].getX() * childSlopes[i]);
 
                 if(childThetas[i] % 360 >= 0 && childThetas[i] % 360 < 90) 
                 {
-                    childVelocities[i].x = -1 * Math.abs(childVelocities[i].x);
-                    childVelocities[i].y = -1 * Math.abs(childVelocities[i].y);
+                    childVelocities[i].setX(-1 * Math.abs(childVelocities[i].getX()));
+                    childVelocities[i].setY(-1 * Math.abs(childVelocities[i].getY()));
                 }
                 else if(childThetas[i] % 360 >= 90 && childThetas[i] % 360 < 180) 
                 {
-                    childVelocities[i].x = Math.abs(childVelocities[i].x);
-                    childVelocities[i].y = -1 * Math.abs(childVelocities[i].y);
+                    childVelocities[i].setX(Math.abs(childVelocities[i].getX()));
+                    childVelocities[i].setY(-1 * Math.abs(childVelocities[i].getY()));
                 }
                 else if(childThetas[i] % 360 >= 180 && childThetas[i] % 360 < 270) 
                 {
-                    childVelocities[i].x = Math.abs(childVelocities[i].x);
-                    childVelocities[i].y = Math.abs(childVelocities[i].y);
+                    childVelocities[i].setX(Math.abs(childVelocities[i].getX()));
+                    childVelocities[i].setY(Math.abs(childVelocities[i].getY()));
                 }
                 else if(childThetas[i] % 360 >= 270 && childThetas[i] % 360 < 360)
                 {
-                    childVelocities[i].x = -1 * Math.abs(childVelocities[i].x);
-                    childVelocities[i].y = Math.abs(childVelocities[i].y);
+                    childVelocities[i].setX(-1 * Math.abs(childVelocities[i].getX()));
+                    childVelocities[i].setY(Math.abs(childVelocities[i].getY()));
                 }
 
                 SpaceObject.objectsToAdd.add(
-                        new Asteroid(childVelocities[i], position.copy(), size - 1));
+                        new Asteroid(childVelocities[i], getPosition().copy(), size - 1));
             }
 		}
 	}
 
-    public String toString() 
-    {
-        return velocity.toString();
+    public String toString() {
+        return getVelocity().toString();
     }
 }

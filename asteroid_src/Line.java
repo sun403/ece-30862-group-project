@@ -5,7 +5,8 @@ public class Line
 	private Vector start;
 	private Vector end;
 
-	public Line(Vector startVector, Vector endVector) {
+	public Line(Vector startVector, Vector endVector)
+    {
 		start = startVector;
 		end = endVector;
 	}
@@ -14,8 +15,8 @@ public class Line
 	{
 		GL11.glBegin(GL11.GL_LINES);
 
-		GL11.glVertex2d(start.x, start.y);
-		GL11.glVertex2d(end.x, end.y);
+		GL11.glVertex2d(start.getX(), start.getY());
+		GL11.glVertex2d(end.getX(), end.getY());
 
 		GL11.glEnd();
 	}

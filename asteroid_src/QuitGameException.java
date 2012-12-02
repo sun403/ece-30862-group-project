@@ -1,4 +1,1 @@
-public class QuitGameException extends Exception
-{
-    //
-}
+public class QuitGameException extends Exception {}

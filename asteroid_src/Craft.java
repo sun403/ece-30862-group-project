@@ -5,7 +5,7 @@ public class Craft extends SpaceObject implements Serializable
 {
 	//Controls how the craft is rotated.
     //-90 points north
-	protected double theta = -90;
+	private double theta = -90;
 	private int lives = 3;
 
 	public Craft(double craftRadius)
@@ -17,6 +17,14 @@ public class Craft extends SpaceObject implements Serializable
 	public void changeTheta(double dTheta) {
 		theta += dTheta;
 	}
+
+    public void setTheta(double newTheta) {
+        theta = newTheta;
+    }
+
+    public void resetTheta() {
+        theta = -90;
+    }
 
     public void resetPosition() {
         setPosition(new Vector());
@@ -40,9 +48,5 @@ public class Craft extends SpaceObject implements Serializable
 
     public double getTheta() {
         return theta;
-    }
-
-    public void resetTheta() {
-        theta = -90;
     }
 }

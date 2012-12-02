@@ -15,11 +15,16 @@ public class SoundPlayer
 	private final IntBuffer buffer = BufferUtils.createIntBuffer(soundFileNames.length);
 	private final IntBuffer source = BufferUtils.createIntBuffer(soundFileNames.length);
 
-	private final FloatBuffer sourcePos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer sourceVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer listenerPos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer listenerVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer listenerOri = (FloatBuffer)BufferUtils.createFloatBuffer(6).put(new float[] { 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f }).rewind();
+	private final FloatBuffer sourcePos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+            new float[] { 0.0f, 0.0f, 0.0f }).rewind();
+	private final FloatBuffer sourceVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+            new float[] { 0.0f, 0.0f, 0.0f }).rewind();
+	private final FloatBuffer listenerPos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+            new float[] { 0.0f, 0.0f, 0.0f }).rewind();
+	private final FloatBuffer listenerVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+            new float[] { 0.0f, 0.0f, 0.0f }).rewind();
+	private final FloatBuffer listenerOri = (FloatBuffer)BufferUtils.createFloatBuffer(6).put(
+            new float[] { 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f }).rewind();
 
 	public SoundPlayer()
 	{
@@ -31,7 +36,6 @@ public class SoundPlayer
             System.out.println(l);
             System.exit(-1);
 		}
-		AL10.alGetError();
 
 		// Load the wav data.
 		if(loadALData() == AL10.AL_FALSE)
@@ -50,8 +54,6 @@ public class SoundPlayer
 		if(AL10.alGetError() != AL10.AL_NO_ERROR) {
 		  return AL10.AL_FALSE;
 		}
-
-		//Loads the wave files from this class's package in your classpath
 
         WaveData soundFile;
 

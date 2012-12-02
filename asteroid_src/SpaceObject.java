@@ -7,10 +7,10 @@ public class SpaceObject implements Serializable
 	public static ArrayList<SpaceObject> objectsToAdd;
 	public static ArrayList<SpaceObject> objectsToRemove;
 
-	protected double mass;
-	protected double radius;
-	protected Vector velocity;
-	protected Vector position;
+	private double mass;
+	private double radius;
+	private Vector velocity;
+	private Vector position;
 
 	public SpaceObject() {
         this(0, 0, new Vector(), new Vector());
@@ -59,26 +59,26 @@ public class SpaceObject implements Serializable
 
 	public void updatePosition()
 	{
-		position.add(velocity.scalarProduct(Constants.DELTA_T));
+		getPosition().add(velocity.scalarProduct(Constants.DELTA_T));
 
 		//Rollover from right side of screen to left
-		if(position.x > Constants.MAX_POSITION.x) {
-			position.x = 0;
+		if(getPosition().getX() > Constants.MAX_POSITION.getX()) {
+			getPosition().setX(0);
 		}
 
 		//Rollover from left side of screen to right
-		else if(position.x < 0) {
-			position.x = Constants.MAX_POSITION.x;
+		else if(getPosition().getX() < 0) {
+			getPosition().setX(Constants.MAX_POSITION.getX());
 		}
 
 		//Rollover from top of screen to bottom
-		if(position.y > Constants.MAX_POSITION.y) {
-			position.y = 0;
+		if(getPosition().getY() > Constants.MAX_POSITION.getY()) {
+			getPosition().setY(0);
 		}
 
 		//Rollover from bottom of screen to top
-		else if(position.y < 0) {
-			position.y = Constants.MAX_POSITION.y;
+		else if(getPosition().getY() < 0) {
+			getPosition().setY(Constants.MAX_POSITION.getY());
 		}
 	}
 

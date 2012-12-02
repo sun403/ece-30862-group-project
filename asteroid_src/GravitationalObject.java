@@ -15,6 +15,8 @@ public class GravitationalObject extends SpaceObject implements Serializable
             new Vector(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2));
     }
 
+    //Made this a singleton because there should and will
+    //only ever be one GravitationalObject
     public static GravitationalObject getInstance()
     {
         if(instance == null) {
@@ -23,6 +25,11 @@ public class GravitationalObject extends SpaceObject implements Serializable
 
         return instance;
     }
+
+    //The GravitationalObject is always present. However when it's turned off,
+    //the UserCraft does not feel it's effects, and it's positioned off screen somewhere.
+    //
+    //The following 2 methods turn it's effects on and off
 
     public void turnOn()
     {
@@ -41,7 +48,7 @@ public class GravitationalObject extends SpaceObject implements Serializable
     public void draw()
     {
         if(toDraw) {
-            Constants.drawCircle(getPosition(), radius, Constants.FULL_CIRCLE);
+            Constants.drawCircle(getPosition(), getRadius(), Constants.FULL_CIRCLE);
         }
     }
 }
