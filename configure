@@ -26,3 +26,6 @@ else:
 
 open('make.sh', 'w').write(makeScriptString)
 open('run.sh', 'w').write(runScriptString)
+
+os.system('chmod +x make.sh')
+os.system('chmod +x run.sh')
