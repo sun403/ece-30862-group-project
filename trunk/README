@@ -1,8 +1,8 @@
 First thing you should do is
-python configure.py
+./configure
 
 Then to compile everything, 
-sh make.sh
+./make.sh
 
 Then to run Asteroids,
-sh run.sh
+./run.sh

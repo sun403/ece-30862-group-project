@@ -25,4 +25,4 @@ else:
     exit()
 
 open('make.sh', 'w').write(makeScriptString)
-open('run.sh', 'w').write(runScriptStringk
+open('run.sh', 'w').write(runScriptString)
