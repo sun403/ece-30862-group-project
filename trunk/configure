@@ -13,8 +13,7 @@ makeScriptString = (
 
 runScriptString = (
     "#! /bin/sh\n"
-    "java -cp slick.jar:asteroid_src:lwjgl-2.8.5/jar/lwjgl.jar:lwjgl-2.8.5/jar/lwjgl_util.jar:sounds/ -Djava.library.path=lwjgl-2.8.5/native/%s Asteroids\n"
-    "rm asteroid_src/*.class\n")
+    "java -cp slick.jar:asteroid_src:lwjgl-2.8.5/jar/lwjgl.jar:lwjgl-2.8.5/jar/lwjgl_util.jar:sounds/ -Djava.library.path=lwjgl-2.8.5/native/%s Asteroids\n")
 
 if platform.system() == 'Linux':
     runScriptString = runScriptString % 'linux'
