@@ -52,8 +52,7 @@ public class Asteroid extends SpaceObject implements Serializable
 				break;
 
 			default:
-				System.out.println("Invalid Asteroid size");
-				System.exit(0);
+				System.exit(-1);
 				break;
 		}
 
