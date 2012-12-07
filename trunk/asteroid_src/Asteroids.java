@@ -25,7 +25,7 @@ import java.lang.reflect.*;
 
 public class Asteroids implements Serializable
 {
-	private static final Font javaFont = new Font("Times New Roman", Font.BOLD, 24);
+    private static final Font javaFont = new Font("Times New Roman", Font.BOLD, 24);
     private static final UnicodeFont scoreFont = new UnicodeFont(javaFont, 20, false, false);
     private static final ColorEffect scoreFontColorEffect = new ColorEffect();
     private static final File highScoresFile = new File("high_scores.txt");
@@ -36,16 +36,16 @@ public class Asteroids implements Serializable
     public static AlienCraft alienCraft;
     public static GravitationalObject gravityObject;
 
-	public Boolean debounceShoot = false;
-	public Boolean debounceThrust = false;
-	public Boolean gameOver = false;
+    public Boolean debounceShoot = false;
+    public Boolean debounceThrust = false;
+    public Boolean gameOver = false;
     public Boolean alienPresent = false;
 
-	public Integer gameScore;
-	public Integer gameLevel;
+    public Integer gameScore;
+    public Integer gameLevel;
 
     public HighScore[] highScores;
-    
+
     public OptionsContainer gameOptions;
 
     public Asteroids()
@@ -64,7 +64,7 @@ public class Asteroids implements Serializable
 
         userCraft = UserCraft.getInstance();
         userCraft.resetPosition();
-		SpaceObject.allSpaceObjects.add(userCraft);
+        SpaceObject.allSpaceObjects.add(userCraft);
 
         //necessary
         alienCraft.setUserCraftReference(userCraft);
@@ -91,7 +91,7 @@ public class Asteroids implements Serializable
                 String[] lineParts = nextLine.split(" ");
 
                 highScores[i] = new HighScore(lineParts[0], 
-                                              Integer.parseInt(lineParts[1]));
+                        Integer.parseInt(lineParts[1]));
                 i++;
             }
             while(i < 10)
@@ -99,7 +99,7 @@ public class Asteroids implements Serializable
                 highScores[i] = new HighScore();
                 i++;
             }
-            
+
         }
         catch(FileNotFoundException f) 
         {
@@ -134,9 +134,9 @@ public class Asteroids implements Serializable
     }
 
     //Returns the best DisplayMode to run Asteroids "in"
-	private DisplayMode getBestDisplay(DisplayMode[] modeArray)
-	{
-		if(modeArray.length != 0)
+    private DisplayMode getBestDisplay(DisplayMode[] modeArray)
+    {
+        if(modeArray.length != 0)
         {
             DisplayModeSorter s = new DisplayModeSorter(modeArray);
             DisplayMode toReturn = s.getBestDisplayMode();
@@ -144,13 +144,13 @@ public class Asteroids implements Serializable
             return toReturn;
         }
 
-		return null;
-	}
+        return null;
+    }
 
     //Adds Asteroid Objects to the screen
-	private void addAsteroids()
-	{
-		for(int i = 0; i < gameOptions.numberOfAsteroidsPerLevel; i++)
+    private void addAsteroids()
+    {
+        for(int i = 0; i < gameOptions.numberOfAsteroidsPerLevel; i++)
         {
             Asteroid toAdd;
             Vector toAddPosition;
@@ -166,8 +166,8 @@ public class Asteroids implements Serializable
                     Constants.MIN_BUFFER_DISTANCE);
 
             SpaceObject.allSpaceObjects.add(toAdd);
-		}
-	}
+        }
+    }
 
     @SuppressWarnings("unchecked")
     private void initializeScoreFont()
@@ -187,25 +187,25 @@ public class Asteroids implements Serializable
 
     private void initializeDisplay()
     {
-		try
+        try
         {
-			DisplayMode bestDisplay = getBestDisplay(Display.getAvailableDisplayModes());
-			Display.setDisplayMode(bestDisplay);
-			Display.setTitle("Asteroids");
+            DisplayMode bestDisplay = getBestDisplay(Display.getAvailableDisplayModes());
+            Display.setDisplayMode(bestDisplay);
+            Display.setTitle("Asteroids");
 
-			Constants.WINDOW_HEIGHT = bestDisplay.getHeight();
-			Constants.WINDOW_WIDTH = bestDisplay.getWidth();
-			Constants.MAX_POSITION = new Vector(
+            Constants.WINDOW_HEIGHT = bestDisplay.getHeight();
+            Constants.WINDOW_WIDTH = bestDisplay.getWidth();
+            Constants.MAX_POSITION = new Vector(
                     Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 
-			Display.create();
+            Display.create();
             Keyboard.create();
-		}
-		catch (LWJGLException e)
+        }
+        catch (LWJGLException e)
         {
-			e.printStackTrace();
-			System.exit(-1);
-		}
+            e.printStackTrace();
+            System.exit(-1);
+        }
 
         return;
     }
@@ -225,14 +225,14 @@ public class Asteroids implements Serializable
     private boolean detectCollisions()
     {
         boolean crashed = false;
-        
+
         for(SpaceObject s : SpaceObject.allSpaceObjects)
         {
             //If we're too close to something, we crash
             if(s instanceof Asteroid || 
-               s instanceof GravitationalObject ||
-               s instanceof AlienCraft ||
-               s instanceof AlienMissle)
+                    s instanceof GravitationalObject ||
+                    s instanceof AlienCraft ||
+                    s instanceof AlienMissle)
             {
                 if(userCraft.getPosition().distanceTo(s.getPosition()) < 
                         s.getRadius() + userCraft.getRadius())
@@ -245,7 +245,7 @@ public class Asteroids implements Serializable
                     if(userCraft.getLives() == 0 && 
                             !gameOptions.unlimitedLives) {
                         gameOver = true;
-                    }
+                            }
                     else
                     {
                         crashed = true;
@@ -263,7 +263,7 @@ public class Asteroids implements Serializable
                     {
                         //if(we shoot an asteroid)
                         if(s.getPosition().distanceTo(a.getPosition()) < 
-                               a.getRadius() + s.getRadius())
+                                a.getRadius() + s.getRadius())
                         {
                             s.delete();
                             a.delete();
@@ -274,7 +274,7 @@ public class Asteroids implements Serializable
                     else if(a instanceof AlienCraft)
                     {
                         if(s.getPosition().distanceTo(a.getPosition()) <
-                            ((AlienCraft)a).getRadius() + ((UserMissle)s).getRadius())
+                                ((AlienCraft)a).getRadius() + ((UserMissle)s).getRadius())
                         {
                             AlienCraft aCraft = ((AlienCraft)a);
                             aCraft.subtractLife();
@@ -410,16 +410,16 @@ public class Asteroids implements Serializable
             case Constants.CONTINUE_GAME:
                 break;
 
-           case Constants.CONTINUE_GAME_WITH_NEW_OPTIONS:
+            case Constants.CONTINUE_GAME_WITH_NEW_OPTIONS:
                 gameOptions = pauseWindow.getOptions();
                 applyGameOptions();
                 break;
 
-           case Constants.SAVE_GAME:
+            case Constants.SAVE_GAME:
                 saveGame(pauseWindow.getSaveFile());
                 break;
 
-           default:
+            default:
                 System.out.println(pauseWindow.getReturnCode());
                 break;
         }
@@ -484,19 +484,19 @@ public class Asteroids implements Serializable
         }
     }
 
-	public void start()
-	{
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, 0, 1, -1);
+    public void start()
+    {
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, 0, 1, -1);
 
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-		//Everything we draw will be white, so set it once and forget it(?)
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+        //Everything we draw will be white, so set it once and forget it(?)
+        GL11.glColor3f(1.0f, 1.0f, 1.0f);
 
-		addAsteroids();
+        addAsteroids();
 
         try
         {
@@ -563,20 +563,20 @@ public class Asteroids implements Serializable
         }
         catch(QuitGameException e) {}
 
-		try {
-			soundPlayer.finalize();
-		}
-		catch(Throwable t) 
+        try {
+            soundPlayer.finalize();
+        }
+        catch(Throwable t) 
         {
             System.out.println(t);
             System.exit(-1);
         }
 
-		Display.destroy();
+        Display.destroy();
 
         updateHighScores();
         displayHighScores();
-	}
+    }
 
     private void updateHighScores()
     {
@@ -668,7 +668,7 @@ public class Asteroids implements Serializable
         }
     }
 
-    
+
     //Removes asteroids using a silly but necessary process
     private void updateAsteroids()
     {
@@ -685,9 +685,9 @@ public class Asteroids implements Serializable
         SpaceObject.objectsToRemove.clear();
     }
 
-	public static void main(String[] argv)
-	{
-		Asteroids game = new Asteroids();
-		game.start();
-	}
+    public static void main(String[] argv)
+    {
+        Asteroids game = new Asteroids();
+        game.start();
+    }
 }

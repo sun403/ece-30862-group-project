@@ -15,11 +15,11 @@ public class AlienCraft extends Craft implements Serializable
     //Using 95% of the values keeps the AlienCraft in the field of view at 
     //all times.
     private final Vector topLeft = new Vector(0.05 * Constants.WINDOW_WIDTH,
-                                              0.05 * Constants.WINDOW_HEIGHT);
+            0.05 * Constants.WINDOW_HEIGHT);
     private final Vector bottomMiddle = new Vector(Constants.WINDOW_WIDTH / 2, 
-                                                   0.95 * Constants.WINDOW_HEIGHT);
+            0.95 * Constants.WINDOW_HEIGHT);
     private final Vector topRight = new Vector(0.95 * Constants.WINDOW_WIDTH, 
-                                               0.05 * Constants.WINDOW_HEIGHT);
+            0.05 * Constants.WINDOW_HEIGHT);
 
     private AlienCraft() {
         super(Constants.ALIEN_CRAFT_RADIUS);
@@ -33,7 +33,7 @@ public class AlienCraft extends Craft implements Serializable
         if(instance == null) {
             instance = new AlienCraft();
         }
-        
+
         return instance;
     }
 
@@ -41,17 +41,17 @@ public class AlienCraft extends Craft implements Serializable
         userCraftReference = reference;
     }
 
-	public void draw()
-	{
+    public void draw()
+    {
         super.draw();
 
         //The points that make up the AlienCraft for drawing.
         //Can't put these in Constants, because they get altered below.
-		Vector x1 = new Vector(0, 2);
-		Vector x2 = new Vector(1, 1);
-		Vector x3 = new Vector(2, 1);
-		Vector x4 = new Vector(3, 0);
-		Vector x5 = new Vector(2, -1);
+        Vector x1 = new Vector(0, 2);
+        Vector x2 = new Vector(1, 1);
+        Vector x3 = new Vector(2, 1);
+        Vector x4 = new Vector(3, 0);
+        Vector x5 = new Vector(2, -1);
         Vector x6 = new Vector(-2, -1);
         Vector x7 = new Vector(-3, 0);
         Vector x8 = new Vector(-2, 1);
@@ -78,7 +78,7 @@ public class AlienCraft extends Craft implements Serializable
 
         //Draws the line under the "cockpit"
         new Line(x2, x8).draw();
-	}
+    }
 
     //Recalculates the AlienCraft's velocity to make sure it's
     //heading for the corner it's supposed to be heading for.
@@ -91,24 +91,24 @@ public class AlienCraft extends Craft implements Serializable
         Vector v;
 
         if(getPosition().distanceTo(topLeft) < 2 || 
-           getPosition().distanceTo(new Vector(0, 0)) < 2)
+                getPosition().distanceTo(new Vector(0, 0)) < 2)
         {
             v = new Vector(bottomMiddle.getX() - getPosition().getX(), 
-                           bottomMiddle.getY() - getPosition().getY());
+                    bottomMiddle.getY() - getPosition().getY());
             v.scalarMultiply(Constants.ALIEN_SPEED_CONSTANT);
             setVelocity(v);
         }
         else if(getPosition().distanceTo(bottomMiddle) < 2)
         {
             v = new Vector(topRight.getX() - getPosition().getX(),
-                           topRight.getY() - getPosition().getY());
+                    topRight.getY() - getPosition().getY());
             v.scalarMultiply(Constants.ALIEN_SPEED_CONSTANT);
             setVelocity(v);
         }
         else if(getPosition().distanceTo(topRight) < 2)
         {
             v = new Vector(topLeft.getX() - getPosition().getX(),
-                           topLeft.getY() - getPosition().getY());
+                    topLeft.getY() - getPosition().getY());
             v.scalarMultiply(Constants.ALIEN_SPEED_CONSTANT);
             setVelocity(v);
         }
@@ -120,8 +120,8 @@ public class AlienCraft extends Craft implements Serializable
         recalculateVelocity();
     }
 
-	public void shoot()
-	{
+    public void shoot()
+    {
         //Vector pointing to the user craft
         Vector rVector = getPosition().difference(userCraftReference.getPosition());
         double missleTheta = rVector.angle();
@@ -129,17 +129,17 @@ public class AlienCraft extends Craft implements Serializable
         //We shoot the missle at some range of thetas, so we're close to hitting the 
         //UserCraft, but we don't always hit it.
         missleTheta = Constants.RANDOM_RANGE(missleTheta - Constants.ALIEN_DELTA_THETA, 
-                                             missleTheta + Constants.ALIEN_DELTA_THETA);
+                missleTheta + Constants.ALIEN_DELTA_THETA);
         missleTheta = Math.toRadians(missleTheta);
 
-		Vector misslePosition = new Vector(0, 0);
-		misslePosition.rotate(missleTheta);
-		misslePosition.add(getPosition());
+        Vector misslePosition = new Vector(0, 0);
+        misslePosition.rotate(missleTheta);
+        misslePosition.add(getPosition());
 
-		Vector missleVelocity = new Vector(Constants.MISSLE_LAUNCH_VELOCITY * Math.cos(missleTheta),
-										   Constants.MISSLE_LAUNCH_VELOCITY * Math.sin(missleTheta));
-		missleVelocity.add(getVelocity());
+        Vector missleVelocity = new Vector(Constants.MISSLE_LAUNCH_VELOCITY * Math.cos(missleTheta),
+                Constants.MISSLE_LAUNCH_VELOCITY * Math.sin(missleTheta));
+        missleVelocity.add(getVelocity());
 
-		allSpaceObjects.add(new AlienMissle(missleVelocity, misslePosition));
-	}
+        allSpaceObjects.add(new AlienMissle(missleVelocity, misslePosition));
+    }
 }

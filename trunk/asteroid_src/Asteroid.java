@@ -3,7 +3,7 @@ import org.lwjgl.opengl.*;
 
 public class Asteroid extends SpaceObject implements Serializable
 {
-	private int size;
+    private int size;
     private double theta;
 
     public Asteroid(int asteroidSpeed)
@@ -17,40 +17,40 @@ public class Asteroid extends SpaceObject implements Serializable
 
     }
 
-	public Asteroid(Vector initialVelocity, Vector initialPosition, int size)
-	{
-		super(0, 0, initialVelocity, initialPosition);
+    public Asteroid(Vector initialVelocity, Vector initialPosition, int size)
+    {
+        super(0, 0, initialVelocity, initialPosition);
 
-		this.size = size;
-		switch(size)
+        this.size = size;
+        switch(size)
         {
-			case Constants.SMALL_ASTEROID:
-				setMass(Constants.SMALL_ASTEROID_MASS);
-				setRadius(Constants.SMALL_ASTEROID_RADIUS);
-				break;
+            case Constants.SMALL_ASTEROID:
+                setMass(Constants.SMALL_ASTEROID_MASS);
+                setRadius(Constants.SMALL_ASTEROID_RADIUS);
+                break;
 
-			case Constants.MEDIUM_ASTEROID:
-				setMass(Constants.MEDIUM_ASTEROID_MASS);
+            case Constants.MEDIUM_ASTEROID:
+                setMass(Constants.MEDIUM_ASTEROID_MASS);
                 setRadius(Constants.MEDIUM_ASTEROID_RADIUS);
-				break;
+                break;
 
-			case Constants.LARGE_ASTEROID:
-				setMass(Constants.LARGE_ASTEROID_MASS);
-				setRadius(Constants.LARGE_ASTEROID_RADIUS);
-				break;
+            case Constants.LARGE_ASTEROID:
+                setMass(Constants.LARGE_ASTEROID_MASS);
+                setRadius(Constants.LARGE_ASTEROID_RADIUS);
+                break;
 
-            //Should never happen
-			default:
-				setMass(Constants.SMALL_ASTEROID_MASS);
-				setRadius(Constants.SMALL_ASTEROID_RADIUS);
-				break;
-		}
+                //Should never happen
+            default:
+                setMass(Constants.SMALL_ASTEROID_MASS);
+                setRadius(Constants.SMALL_ASTEROID_RADIUS);
+                break;
+        }
 
         //Give each asteroid a random starting rotation
         theta = Constants.RANDOM_RANGE(0, 360);
-	}
+    }
 
-	public void draw()
+    public void draw()
     {
         super.draw();
 
@@ -103,11 +103,11 @@ public class Asteroid extends SpaceObject implements Serializable
 
         //Drawing a line from the last point to the first point
         new Line(asteroidPoints[asteroidPoints.length - 1], asteroidPoints[0]).draw();
-	}
+    }
 
-	public void delete()
-	{
-		super.delete();
+    public void delete()
+    {
+        super.delete();
 
         double newMass = 0;
 
@@ -122,7 +122,7 @@ public class Asteroid extends SpaceObject implements Serializable
         //One of which is heading in the same direction as this one,
         //the other 2 are heading 45 degrees and -45 degrees offset
         //from the current direction.
-		if(this.size > 0)
+        if(this.size > 0)
         {
             Vector totalMomentum = getVelocity().scalarProduct(getMass());
             double originalTheta = totalMomentum.angle();
@@ -130,8 +130,8 @@ public class Asteroid extends SpaceObject implements Serializable
             Vector[] childVelocities = { new Vector(), new Vector(), new Vector() };
             double[] childSlopes = new double[3];
             double[] childThetas = { originalTheta + 45, 
-                                     originalTheta, 
-                                     originalTheta - 45 };
+                originalTheta, 
+                originalTheta - 45 };
 
 
             for(int i = 0; i < childThetas.length; i++) {
@@ -143,7 +143,7 @@ public class Asteroid extends SpaceObject implements Serializable
                 //These equations conserve momentum. I figured them out one day,
                 //with a pencil, and a lot of paper. Do not try to understand them.
                 childVelocities[i].setX((getMass() * getVelocity().getMagnitude()) / 
-                                        (3 * newMass * Math.sqrt(1 + Math.pow(childSlopes[i], 2))));
+                        (3 * newMass * Math.sqrt(1 + Math.pow(childSlopes[i], 2))));
 
                 childVelocities[i].setY(childVelocities[i].getX() * childSlopes[i]);
 
@@ -171,8 +171,8 @@ public class Asteroid extends SpaceObject implements Serializable
                 SpaceObject.objectsToAdd.add(
                         new Asteroid(childVelocities[i], getPosition().copy(), size - 1));
             }
-		}
-	}
+        }
+    }
 
     public String toString() {
         return getVelocity().toString();

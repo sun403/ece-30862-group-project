@@ -41,7 +41,7 @@ public class DisplayModeSorter
 
         frequencyMap = createDisplayModeMap(modeList, SORT_BY_FREQUENCY);
         modeList = frequencyMap.get(getBiggestKey(frequencyMap));
-        
+
         bitsPerPixelMap = createDisplayModeMap(modeList, SORT_BY_BITS_PER_PIXEL);
         modeList = bitsPerPixelMap.get(getBiggestKey(bitsPerPixelMap));
 
@@ -73,23 +73,23 @@ public class DisplayModeSorter
     //keyable by either height, width, frequency, or bits per pixel.
     private HashMap<Integer, ArrayList<DisplayMode>> 
         createDisplayModeMap(ArrayList<DisplayMode> modes, int keyBy)
-    {
-        HashMap<Integer, ArrayList<DisplayMode>> toReturn = new 
-            HashMap<Integer, ArrayList<DisplayMode>>();
-
-        for(DisplayMode mode : modes)
         {
-            int value = getValue(mode, keyBy);
+            HashMap<Integer, ArrayList<DisplayMode>> toReturn = new 
+                HashMap<Integer, ArrayList<DisplayMode>>();
 
-            if(toReturn.get(value) == null) {
-                toReturn.put(value, new ArrayList<DisplayMode>());
+            for(DisplayMode mode : modes)
+            {
+                int value = getValue(mode, keyBy);
+
+                if(toReturn.get(value) == null) {
+                    toReturn.put(value, new ArrayList<DisplayMode>());
+                }
+
+                toReturn.get(value).add(mode);
             }
 
-            toReturn.get(value).add(mode);
+            return toReturn;
         }
-
-        return toReturn;
-    }
 
     //Given a HashMap that has Integer keys, returns the value
     //of the largest key.
