@@ -23,8 +23,8 @@ public class HighScoreDisplay extends JFrame
         {
 
             if(highScores[i].getScore() > 0 && 
-               highScores[i].getName() != "" &&
-               highScores[i].getName() != null) 
+                    highScores[i].getName() != "" &&
+                    highScores[i].getName() != null) 
             {
                 labels[0][i] = new JLabel(highScores[i].getName());
                 labels[1][i] = new JLabel(Integer.toString(highScores[i].getScore()));

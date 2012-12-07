@@ -65,7 +65,7 @@ public class OptionsDialog extends JFrame
     public OptionsDialog(OptionsContainer currentOptions)
     {
         returnOptions = new OptionsContainer();
-        
+
         setSize(windowWidth, windowHeight);
         setTitle("Options");
         setLocationRelativeTo(null);
@@ -123,7 +123,7 @@ public class OptionsDialog extends JFrame
 
         startingLevelBox.setBounds(initialOffset, numberOfAsteroidsLabel.getY() + deltaY, textBoxWidth, height);
         startingLevelLabel.setBounds(initialOffset + labelOffset, startingLevelBox.getY(), labelWidth, height);
-        
+
         resetHighScores.setBounds(initialOffset, startingLevelLabel.getY() + deltaY, windowWidth, height);
         restoreSavedGame.setBounds(initialOffset, resetHighScores.getY() + deltaY, windowWidth, height);
     }

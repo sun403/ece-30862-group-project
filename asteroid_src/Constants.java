@@ -13,8 +13,8 @@ public final class Constants
 
     public static final double GRAVITATIONAL_CONSTANT = 6.673e-3;
     public static final double GRAVITATIONAL_OBJECT_MASS = 100.0;
-	public static final double MISSLE_MASS = 1.0;
-	public static final double CRAFT_MASS = 100.0;
+    public static final double MISSLE_MASS = 1.0;
+    public static final double CRAFT_MASS = 100.0;
 
     public static final int SMALL_ASTEROID = 0;
     public static final int MEDIUM_ASTEROID = 1;
@@ -27,9 +27,9 @@ public final class Constants
     private static final double ERROR_RANGE = 0.15;
 
     //Found by trying different numbers until I found ones I liked
-	public static final double SMALL_ASTEROID_SCALE = 1.5;
-	public static final double MEDIUM_ASTEROID_SCALE = 4;
-	public static final double LARGE_ASTEROID_SCALE = 8;
+    public static final double SMALL_ASTEROID_SCALE = 1.5;
+    public static final double MEDIUM_ASTEROID_SCALE = 4;
+    public static final double LARGE_ASTEROID_SCALE = 8;
 
     //Minimum distance between an asteroid's starting position
     //and the user's craft's starting position
@@ -37,22 +37,22 @@ public final class Constants
     //causing a loss of life instantly.
     public static final double MIN_BUFFER_DISTANCE = 50;
 
-	public static final double SMALL_ASTEROID_RADIUS = 
+    public static final double SMALL_ASTEROID_RADIUS = 
         SMALL_ASTEROID_SCALE * ASTEROID_RADIUS * (1 - ERROR_RANGE);
-	public static final double MEDIUM_ASTEROID_RADIUS = 
+    public static final double MEDIUM_ASTEROID_RADIUS = 
         MEDIUM_ASTEROID_SCALE * ASTEROID_RADIUS * (1 - ERROR_RANGE);
-	public static final double LARGE_ASTEROID_RADIUS = 
+    public static final double LARGE_ASTEROID_RADIUS = 
         LARGE_ASTEROID_SCALE * ASTEROID_RADIUS * (1 - ERROR_RANGE);
 
     //Found by trying different numbers until I found ones I liked
-	public static final double SMALL_ASTEROID_MASS = 33.3;
-	public static final double MEDIUM_ASTEROID_MASS = 100.0;
-	public static final double LARGE_ASTEROID_MASS = 300.0;
+    public static final double SMALL_ASTEROID_MASS = 33.3;
+    public static final double MEDIUM_ASTEROID_MASS = 100.0;
+    public static final double LARGE_ASTEROID_MASS = 300.0;
 
-	public static final double MISSLE_RADIUS = 2;
+    public static final double MISSLE_RADIUS = 2;
 
-	public static final double THRUSTER_FORCE = 500.0;
-	public static final double MISSLE_LAUNCH_VELOCITY = 120.0;
+    public static final double THRUSTER_FORCE = 500.0;
+    public static final double MISSLE_LAUNCH_VELOCITY = 120.0;
 
     public static final int SHOOT_SOUND = 0;
     public static final int EXPLOSION_SOUND = 1;
@@ -60,9 +60,9 @@ public final class Constants
 
     //can't be final
 
-	public static final double DELTA_T = 0.1;
+    public static final double DELTA_T = 0.1;
 
-	public static final double ROTATION_SPEED = 3.5;    
+    public static final double ROTATION_SPEED = 3.5;    
     public static final double SCALING_FACTOR = 1.0;
 
     public static final int CONTINUE_GAME = 0;
@@ -81,30 +81,30 @@ public final class Constants
     public static final double ALIEN_DELTA_THETA = 15.0;
 
     //Non final variables
-	public static Vector MAX_POSITION;
-	public static int WINDOW_WIDTH;
-	public static int WINDOW_HEIGHT;
+    public static Vector MAX_POSITION;
+    public static int WINDOW_WIDTH;
+    public static int WINDOW_HEIGHT;
 
     //Retuns a double in [x, y)
     public static final double RANDOM_RANGE(double x, double y) {
         return (Math.random() * (y - x)) + x;
     }
 
-	public static final void drawCircle(Vector center, double radius, int mode)
-	{
+    public static final void drawCircle(Vector center, double radius, int mode)
+    {
         int numberOfCircleIncrements = 72;
         double twoPI = 2 * Math.PI;
-        
+
         GL11.glBegin(mode);
-		GL11.glVertex2d(center.getX(), center.getY());
+        GL11.glVertex2d(center.getX(), center.getY());
 
         //Draws a circle by drawing a bunch of rectthetas. 
-		for(double theta = 0; theta <= twoPI; theta += twoPI / numberOfCircleIncrements) {
-			GL11.glVertex2d(center.getX() + (Math.sin(theta) * radius), center.getY() + (Math.cos(theta) * radius));
-		}
+        for(double theta = 0; theta <= twoPI; theta += twoPI / numberOfCircleIncrements) {
+            GL11.glVertex2d(center.getX() + (Math.sin(theta) * radius), center.getY() + (Math.cos(theta) * radius));
+        }
 
-		GL11.glEnd();
-	}
+        GL11.glEnd();
+    }
 
     public static Vector RANDOM_POSITION()
     {

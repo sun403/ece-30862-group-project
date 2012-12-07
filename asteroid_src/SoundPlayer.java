@@ -12,48 +12,48 @@ import org.lwjgl.util.*;
 public class SoundPlayer
 {
     private final String[] soundFileNames = { "shoot.wav", "explosion.wav", "ufo.wav" };
-	private final IntBuffer buffer = BufferUtils.createIntBuffer(soundFileNames.length);
-	private final IntBuffer source = BufferUtils.createIntBuffer(soundFileNames.length);
+    private final IntBuffer buffer = BufferUtils.createIntBuffer(soundFileNames.length);
+    private final IntBuffer source = BufferUtils.createIntBuffer(soundFileNames.length);
 
-	private final FloatBuffer sourcePos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+    private final FloatBuffer sourcePos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
             new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer sourceVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+    private final FloatBuffer sourceVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
             new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer listenerPos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+    private final FloatBuffer listenerPos = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
             new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer listenerVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
+    private final FloatBuffer listenerVel = (FloatBuffer)BufferUtils.createFloatBuffer(3).put(
             new float[] { 0.0f, 0.0f, 0.0f }).rewind();
-	private final FloatBuffer listenerOri = (FloatBuffer)BufferUtils.createFloatBuffer(6).put(
+    private final FloatBuffer listenerOri = (FloatBuffer)BufferUtils.createFloatBuffer(6).put(
             new float[] { 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f }).rewind();
 
-	public SoundPlayer()
-	{
-		try {
-			AL.create();
-		} 
+    public SoundPlayer()
+    {
+        try {
+            AL.create();
+        } 
         catch(LWJGLException l)
         {
             System.out.println(l);
             System.exit(-1);
-		}
+        }
 
-		// Load the wav data.
-		if(loadALData() == AL10.AL_FALSE)
+        // Load the wav data.
+        if(loadALData() == AL10.AL_FALSE)
         {
-			System.out.println("Error loading data.");
+            System.out.println("Error loading data.");
             System.exit(-1);
-		}
+        }
 
-		setListenerValues();
-	}
+        setListenerValues();
+    }
 
-	private int loadALData()
-	{
-		AL10.alGenBuffers(buffer);
+    private int loadALData()
+    {
+        AL10.alGenBuffers(buffer);
 
-		if(AL10.alGetError() != AL10.AL_NO_ERROR) {
-		  return AL10.AL_FALSE;
-		}
+        if(AL10.alGetError() != AL10.AL_NO_ERROR) {
+            return AL10.AL_FALSE;
+        }
 
         WaveData soundFile;
 
@@ -64,11 +64,11 @@ public class SoundPlayer
             soundFile.dispose();
         }
 
-		AL10.alGenSources(source);
+        AL10.alGenSources(source);
 
-		if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-			return AL10.AL_FALSE;
-		}
+        if (AL10.alGetError() != AL10.AL_NO_ERROR) {
+            return AL10.AL_FALSE;
+        }
 
 
         for(int i = 0; i < soundFileNames.length; i++)
@@ -80,38 +80,38 @@ public class SoundPlayer
             AL10.alSource (source.get(i), AL10.AL_VELOCITY, sourceVel    );
         }
 
-		if (AL10.alGetError() == AL10.AL_NO_ERROR) {
-			return AL10.AL_TRUE;
-		}
+        if (AL10.alGetError() == AL10.AL_NO_ERROR) {
+            return AL10.AL_TRUE;
+        }
 
-		return AL10.AL_FALSE;
-	}
+        return AL10.AL_FALSE;
+    }
 
-	private void setListenerValues()
-	{
-		AL10.alListener(AL10.AL_POSITION,    listenerPos);
-		AL10.alListener(AL10.AL_VELOCITY,    listenerVel);
-		AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
-	}
+    private void setListenerValues()
+    {
+        AL10.alListener(AL10.AL_POSITION,    listenerPos);
+        AL10.alListener(AL10.AL_VELOCITY,    listenerVel);
+        AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
+    }
 
-	private void killALData()
-	{
-		AL10.alDeleteSources(source);
-		AL10.alDeleteBuffers(buffer);
-	}
+    private void killALData()
+    {
+        AL10.alDeleteSources(source);
+        AL10.alDeleteBuffers(buffer);
+    }
 
-	public void play(int toPlay) {
+    public void play(int toPlay) {
         AL10.alSourcePlay(source.get(toPlay));
-	}
-    
+    }
+
     public void stopPlay(int toStop) {
         AL10.alSourceStop(source.get(toStop));
     }
 
-	protected void finalize() throws Throwable
-	{
-		super.finalize();
-		killALData();
-		AL.destroy();
-	}
+    protected void finalize() throws Throwable
+    {
+        super.finalize();
+        killALData();
+        AL.destroy();
+    }
 }

@@ -9,10 +9,10 @@ public class GravitationalObject extends SpaceObject implements Serializable
     private GravitationalObject()
     {
         super(
-            0,
-            Constants.GRAVITATIONAL_OBJECT_RADIUS,
-            new Vector(),
-            new Vector(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2));
+                0,
+                Constants.GRAVITATIONAL_OBJECT_RADIUS,
+                new Vector(),
+                new Vector(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2));
     }
 
     //Made this a singleton because there should and will
