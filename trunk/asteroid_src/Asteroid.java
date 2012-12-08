@@ -12,7 +12,7 @@ public class Asteroid extends SpaceObject implements Serializable
 
         //To make the game differnet every time, the asteroids
         //start out with random velocities and positions
-        setVelocity(Consants.RANDOM_VELOCITY_WITH_MAGNIUDE(asteroidSpeed));
+        setVelocity(Constants.RANDOM_VELOCITY_WITH_MAGNITUDE(asteroidSpeed));
         setPosition(Constants.RANDOM_POSITION());
 
     }
