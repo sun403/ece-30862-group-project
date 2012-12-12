@@ -60,9 +60,9 @@ public final class Constants
 
     //can't be final
 
-    public static final double DELTA_T = 0.1;
+    public static final double DELTA_T = 0.025;
 
-    public static final double ROTATION_SPEED = 3.5;    
+    public static final double ROTATION_SPEED = 1.0;    
     public static final double SCALING_FACTOR = 1.0;
 
     public static final int CONTINUE_GAME = 0;

@@ -529,7 +529,7 @@ public class Asteroids implements Serializable
                     }
                     if(alienPresent)
                     {
-                        if(Math.random() < 0.005 * gameLevel)
+                        if(Math.random() < 0.0005 * gameLevel)
                         {
                             alienCraft.shoot();
                             soundPlayer.play(Constants.SHOOT_SOUND);
