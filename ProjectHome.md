@@ -1,0 +1,1 @@
+For this project we will develop a modiﬁcation of the Asteroids/Space wars game.
